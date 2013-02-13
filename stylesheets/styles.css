@@ -1,0 +1,4 @@
+.box2dDebugCanvas{
+float:left;
+-webkit-transform:scaleY(-1)
+}

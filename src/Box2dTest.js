@@ -43,7 +43,8 @@ Box2DTestLayer = cc.Layer.extend({
             , b2Body = Box2D.Dynamics.b2Body
             , b2FixtureDef = Box2D.Dynamics.b2FixtureDef
             , b2World = Box2D.Dynamics.b2World
-            , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
+            , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+            , b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
 
         var screenSize = cc.Director.getInstance().getWinSize();
         //UXLog(L"Screen width %0.2f screen height %0.2f",screenSize.width,screenSize.height);
@@ -79,7 +80,8 @@ Box2DTestLayer = cc.Layer.extend({
         bodyDef.position.Set(10, screenSize.height / PTM_RATIO + 1.8);
         this.world.CreateBody(bodyDef).CreateFixture(fixDef);
         // bottom
-        bodyDef.position.Set(10, -1.8);
+        //bodyDef.position.Set(10, -1.8);
+        bodyDef.position.Set(10, .4);
         this.world.CreateBody(bodyDef).CreateFixture(fixDef);
 
         fixDef.shape.SetAsBox(2, 14);
@@ -90,17 +92,43 @@ Box2DTestLayer = cc.Layer.extend({
         bodyDef.position.Set(26.8, 13);
         this.world.CreateBody(bodyDef).CreateFixture(fixDef);
 
+
+        // Static box position test
+        fixDef.shape.SetAsBox(32 / PTM_RATIO, 32 / PTM_RATIO);
+        bodyDef.position.Set(100 / PTM_RATIO, 100 / PTM_RATIO);
+        this.world.CreateBody(bodyDef).CreateFixture(fixDef);
+
+
+
         //Set up sprite
 
         var mgr = cc.SpriteBatchNode.create(s_pathBlock, 150);
         this.addChild(mgr, 0, TAG_SPRITE_MANAGER);
 
         this.addNewSpriteWithCoords(cc.p(screenSize.width / 2, screenSize.height / 2));
-
-        var label = cc.LabelTTF.create("Tap screen", "Marker Felt", 32);
-        this.addChild(label, 0);
-        label.setColor(cc.c3b(0, 0, 255));
-        label.setPosition(cc.p(screenSize.width / 2, screenSize.height - 50));
+        
+        // attempt to draw debug using another canvas
+       var debugDraw = new b2DebugDraw();
+			debugDraw.SetSprite(document.getElementById("boxCanvas").getContext("2d"));
+			debugDraw.SetDrawScale(PTM_RATIO);
+			debugDraw.SetFillAlpha(0.5);
+			debugDraw.SetLineThickness(1.0);
+			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+			this.world.SetDebugDraw(debugDraw);
+			
+			
+			
+			/* //currently doesn't work on cc2d HTML5 2.1. To reactivate also have to override draw() function and include this.world.DrawDebugData();
+			// attempt to draw debug using Cocos2D
+			        //set up debug draw
+        var debugDraw = new b2DebugDraw();
+        debugDraw.SetSprite(cc.renderContext);
+        debugDraw.SetDrawScale(PTM_RATIO);
+        debugDraw.SetFillAlpha(0.3);
+        debugDraw.SetLineThickness(1.0);
+        debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit | b2DebugDraw.e_centerOfMassBit);
+        this.world.SetDebugDraw(debugDraw);
+        */
 
         this.scheduleUpdate();
         
@@ -115,7 +143,10 @@ Box2DTestLayer = cc.Layer.extend({
     addNewSpriteWithCoords:function (p) {
         //UXLog(L"Add sprite %0.2f x %02.f",p.x,p.y);
         var batch = this.getChildByTag(TAG_SPRITE_MANAGER);
-
+        // correct for world movement
+        p.x = p.x - this.getPosition().x;
+        p.y = p.y - this.getPosition().y;
+        cc.log("addNewSpriteWithCoords:function (p) p.x/y = " + p.x + " " + p.y);
         //We have a 64x64 sprite sheet with 4 different 32x32 images.  The following code is
         //just randomly picking one of the images
         var idx = (Math.random() > .5 ? 0 : 1);
@@ -173,8 +204,19 @@ Box2DTestLayer = cc.Layer.extend({
                 //console.log(b.GetAngle());
             }
         }
+        
+         this.world.DrawDebugData();
+         this.setPosition(cc.p(this.getPosition().x + .3, this.getPosition().y + .3));
+         //this.world.position.Set(2,2);
 
     },
+    /* enable to draw physics shapes on CC2D Canvas. Doesn't work correctly in CC2D currently (cc2D HTML5 2.1)
+    draw:function (ctx) {
+    	this.world.DrawDebugData();
+        this._super(ctx);
+    },
+    */
+    
     onMouseUp:function (event) {
         //Add a new body/atlas sprite at the touched location
         cc.log("Box2dTest Mouse Up");
