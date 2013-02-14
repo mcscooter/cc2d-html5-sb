@@ -37,10 +37,13 @@ var SCGameInit = cc.Layer.extend({
         // Changes the canvas element size to fit the screen
         this.adjustSizeForWindow();
        // lazyLayer.adjustSizeForCanvas();
+        
+        
+        
         // Any time we resize the screen, the game will change to match the screen
-        window.addEventListener("resize", function (event) {
+        /*window.addEventListener("resize", function (event) {
             selfPointer.adjustSizeForWindow();
-        }); 
+        }); */
         
         return true;
     },

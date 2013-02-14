@@ -41,6 +41,7 @@
             'src/SCEvent.js',
             'src/SCListener.js',
             'src/SCMediator.js',
+            'src/SCBox2dLayer.js',
             'src/SCGameLayer.js',
             'src/SCHUDLayer.js',
             'src/SCLogicComponent.js',

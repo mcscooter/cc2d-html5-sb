@@ -24,6 +24,7 @@ var SCTileMap = cc.TMXTiledMap.extend({
   
    },
    
+   // recieves world point like a touch and converts it to map space (starts in TL, not BL) and returns properties
    getPointProperties:function(layerName, point){
 	   	var layer = this.getLayer(layerName);
     	var tileSize = this.getTileSize();
@@ -38,6 +39,25 @@ var SCTileMap = cc.TMXTiledMap.extend({
     	tilePointProperties = this.propertiesForGID(tileGID);
     	
     	return(tilePointProperties);   
+   },
+   // take tile coords in world space, converts to tile space and returns properties
+   getTileProperties:function(layerName, point){
+	   	var layer = this.getLayer(layerName);
+    	var tileSize = this.getTileSize();
+    	var mapSize = this.getMapSize();
+    	var mapLocation = this.getPosition();
+    	var tileX = point.x;
+    	var tileY = Math.floor(mapSize.height - point.y - 1); // Because Tiled maps register in the top left corner rather than bottom left
+    	var tileCoord = cc.p(tileX, tileY);
+    	var tileGID = layer.getTileGIDAt(tileCoord);
+    	var tilePointProperties = new Object();
+    	
+    	tilePointProperties = this.propertiesForGID(tileGID);
+    	//cc.log(mapSize.height / tileSize.height);
+    	 cc.log("SCTileMap getTileProperties  tileCoord.x/y properties = " + tileX + ", " + tileY + " = "); 
+    	 //cc.log(this.getPointProperties("foreground", cc.p(tileX,tileY)).name);
+    	
+    	return(tilePointProperties);  
    },
    
    removeCustomer:function(point){

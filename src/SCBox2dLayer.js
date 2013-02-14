@@ -1,3 +1,7 @@
+// Box2D Physics Container
+// Scott Cummings, 2013
+// 
+
 /****************************************************************************
  Copyright (c) 2010-2012 cocos2d-x.org
  Copyright (c) 2008-2010 Ricardo Quesada
@@ -23,21 +27,18 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
+
 var TAG_SPRITE_MANAGER = 1;
 var PTM_RATIO = 32;
 
-Box2DTestLayer = cc.Layer.extend({
-
-    world:null,
-    isMouseDown:false,
-    //GLESDebugDraw *m_debugDraw;
-
-
-    ctor:function () {
-        this.setMouseEnabled(true);
-        this.setTouchEnabled(true);
-        //setAccelerometerEnabled( true );
+var SCBox2dLayer = cc.Layer.extend({
+	ctor:function () {
+		this._super();
+        this.gameConfig = new SCGameConfig();
         
+    },
+    
+    initWithMap:function(map){
         var b2Vec2 = Box2D.Common.Math.b2Vec2
             , b2BodyDef = Box2D.Dynamics.b2BodyDef
             , b2Body = Box2D.Dynamics.b2Body
@@ -47,24 +48,62 @@ Box2DTestLayer = cc.Layer.extend({
             , b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
 
         var screenSize = cc.Director.getInstance().getWinSize();
-        //UXLog(L"Screen width %0.2f screen height %0.2f",screenSize.width,screenSize.height);
-
 
         // Construct a world object, which will hold and simulate the rigid bodies.
         this.world = new b2World(new b2Vec2(0, -10), true);
         this.world.SetContinuousPhysics(true);
-
-        this.isMouseDown = false;
+        	
+        //cc.log("SCBox2dLayer initWithMap Tile Property Test - coord.x/y properties = 0,0 " + map.getPointProperties("foreground", cc.p(0,0)).name);
         
-        // Define the ground body.
-        //var groundBodyDef = new b2BodyDef(); // TODO
-        //groundBodyDef.position.Set(screenSize.width / 2 / PTM_RATIO, screenSize.height / 2 / PTM_RATIO); // bottom-left corner
-
-        // Call the body factory which allocates memory for the ground body
-        // from a pool and creates the ground box shape (also from a pool).
-        // The body is also added to the world.
-        //var groundBody = this.world.CreateBody(groundBodyDef);
-
+        for(var i=0; i<map.getMapSize().height; i++){
+	        for(var j=0; j<map.getMapSize().width; j++){
+		        cc.log("SCBox2dLayer initWithMap Tile Property Test - coord.x/y properties = " + j + ", " + i + " " + map.getTileProperties("foreground", cc.p(j,i)).name);
+	        }
+        }
+        	
+        	
+   /*
+	    var bottomLeft = cc.p(position.x + hitboxVertices[0].x, position.y + hitboxVertices[0].y + 1);
+	    var topLeft = cc.p(position.x + hitboxVertices[3].x, position.y + hitboxVertices[3].y - 1);
+	    var blForegroundProperties = map.getPointProperties("foreground", bottomLeft);
+	    if(blForegroundProperties){
+		    if(blForegroundProperties.name == "grass" || blForegroundProperties.name == "house"){
+			     while(map.getPointProperties("foreground", bottomLeft).name == "grass" || map.getPointProperties("foreground", bottomLeft).name == "house"){
+				     position.x += .1;
+				     bottomLeft = cc.p(position.x + hitboxVertices[0].x, position.y + hitboxVertices[0].y + 1);
+			     }
+			     position.x = Math.floor(position.x);
+			     this.velocity.x = 0;
+		    }
+	    }
+	    
+	    var tlForegroundProperties = map.getPointProperties("foreground", topLeft);
+	    if(tlForegroundProperties){
+		    if(tlForegroundProperties.name == "grass" || tlForegroundProperties.name == "house"){
+			     while(map.getPointProperties("foreground", topLeft).name == "grass" || map.getPointProperties("foreground", topLeft).name == "house"){
+				     position.x += .1;
+				     topLeft = cc.p(position.x + hitboxVertices[3].x, position.y + hitboxVertices[3].y - 1);
+			     }
+			     position.x = Math.floor(position.x);
+			     this.velocity.x = 0;
+		    }
+	    }
+	*/
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        // Start creating the tile world rigid bodies
         var fixDef = new b2FixtureDef;
         fixDef.density = 1.0;
         fixDef.friction = 0.5;
@@ -118,9 +157,10 @@ Box2DTestLayer = cc.Layer.extend({
 			
 			
 			
-			/* //currently doesn't work on cc2d HTML5 2.1. To reactivate also have to override draw() function and include this.world.DrawDebugData();
-			// attempt to draw debug using Cocos2D
-			        //set up debug draw
+		/* //currently doesn't work on cc2d HTML5 2.1. To reactivate also have to override draw() function and include this.world.DrawDebugData();
+		// Also, could try transforming this layer to see if it changes the view
+		// attempt to draw debug using Cocos2D
+		//set up debug draw
         var debugDraw = new b2DebugDraw();
         debugDraw.SetSprite(cc.renderContext);
         debugDraw.SetDrawScale(PTM_RATIO);
@@ -130,9 +170,10 @@ Box2DTestLayer = cc.Layer.extend({
         this.world.SetDebugDraw(debugDraw);
         */
 
-        this.scheduleUpdate();
+        //this.scheduleUpdate();
         
         cc.log("Box2DTest Finished CTOR");
+
     },
 
     addNewSpriteWithCoords:function (p) {
@@ -204,7 +245,7 @@ Box2DTestLayer = cc.Layer.extend({
          //this.setPosition(cc.p(this.getPosition().x + .3, this.getPosition().y + .3));
          //this.world.position.Set(2,2);
 
-    },
+    }
     /* enable to draw physics shapes on CC2D Canvas. Doesn't work correctly in CC2D currently (cc2D HTML5 2.1)
     draw:function (ctx) {
     	this.world.DrawDebugData();
@@ -212,45 +253,6 @@ Box2DTestLayer = cc.Layer.extend({
     },
     */
     
-    onMouseUp:function (event) {
-        //Add a new body/atlas sprite at the touched location
-        cc.log("Box2dTest Mouse Up");
-        var location = event.getLocation();
-        //location = cc.Director.getInstance().convertToGL(location);
-        this.addNewSpriteWithCoords(location);
-    },
-        // Handle touch and mouse events
-    onTouchesBegan:function (touches, event) {
-        this.isMouseDown = true;
-        cc.log("Box2dTest Touch Down");
-    },
-    onTouchesMoved:function (touches, event) {
-        if (this.isMouseDown) {
-            if (touches) {
-            cc.log("Box2dTest Touch Moved");
-                
-            }
-        }
-    },
-    onTouchesEnded:function (touches, event) {
-        this.isMouseDown = false;
-        cc.log("Box2dTest Touch Up");
-    },
-    onTouchesCancelled:function (touches, event) {
-    	cc.log("Box2dTest Touch Cancelled");
-    }
+    
 
-    //CREATE_NODE(Box2DTestLayer);
-});
-
-//Box2DTestScene = TestScene.extend({
-Box2DTestScene = cc.Scene.extend({
-
-    ctor:function () {
-    	this._super();
-        var layer = new Box2DTestLayer();
-        this.addChild(layer);
-
-        cc.Director.getInstance().replaceScene(this);
-    }
 });

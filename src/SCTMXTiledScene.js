@@ -36,6 +36,15 @@ var SCTileLayer = cc.Layer.extend({
         tileMap.setPosition(this.gameConfig.maps.level1.position);
         this.gameLayer.addChild(tileMap, 0, this.gameConfig.globals.TAG_TILE_MAP);
        
+       
+        // Make a physics layer
+        var physicsLayer = new SCBox2dLayer();
+        physicsLayer.initWithMap(tileMap);
+        physicsLayer.setPosition(this.gameConfig.Box2dLayer.position);
+        this.gameLayer.addChild(physicsLayer, -1000, this.gameConfig.globals.TAG_BOX2D_LAYER);
+       
+       
+       
         // set up the listener and messaging mediator
        	this.mediator = new SCMediator();
        	
@@ -194,6 +203,8 @@ var SCTileLayer = cc.Layer.extend({
        	this.mediator.send(event2);
        	
        	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER).move(mapTouchLocation);
+       	
+       	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewSpriteWithCoords(touchLocation);
 
     },
     onTouchCancelled:function (touch, event) {
@@ -264,6 +275,7 @@ var SCTileLayer = cc.Layer.extend({
 	    this.mediator.update();
 	    this.updateLogic();
 	    this.updatePhysics(dt);
+	    this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).update(dt);
 	    this.updateRender();
 	    this.updateHUD(dt);
       },

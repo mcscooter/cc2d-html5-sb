@@ -50,6 +50,11 @@ var SCGameConfig = cc.Class.extend({
 	   					}
    					};
    					
+   		this.Box2dLayer = {
+	   					"position":cc.p(0,0)	
+	   		
+   		};
+   					
    		this.globals = {
    						
 	   					"MSG_LAYER_TOUCHED" :1,
@@ -70,7 +75,8 @@ var SCGameConfig = cc.Class.extend({
 						"TAG_GAME_LAYER":11,
 						"TAG_MENU_BACKGROUND":12,
 						"TAG_MENU_TITLE":13,
-						"TAG_CAR_ENTITY":14
+						"TAG_CAR_ENTITY":14,
+						"TAG_BOX2D_LAYER":15
    		};
    		
    		this.timer = {	

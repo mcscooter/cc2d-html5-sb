@@ -23,7 +23,7 @@ var SCGameMenu = cc.Layer.extend({
         
         var title = new cc.Sprite(this.gameConfig.gameMenuScene.titleTexture);     
     	title.setPosition(this.gameConfig.gameMenuScene.titlePosition);
-    	this.addChild(title, 1, this.gameConfig.globals.TAG_MENU_TITLE);
+    	//this.addChild(title, 1, this.gameConfig.globals.TAG_MENU_TITLE);
     	
     	// Add the menu
     	// cc.MenuItemImage.create(normal image, selected image, selector, target)
