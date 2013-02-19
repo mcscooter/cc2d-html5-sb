@@ -38,6 +38,16 @@
     <property name="solid" value="false"/>
    </properties>
   </tile>
+  <tile id="6">
+   <properties>
+    <property name="movement" value="solid"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="movement" value="road"/>
+   </properties>
+  </tile>
   <tile id="18">
    <properties>
     <property name="name" value="house"/>
@@ -193,6 +203,11 @@
  <layer name="customers" width="60" height="60">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3VQQqEMAwFUK81zuj9j2UWUygl1W4j78EHkSwaPtVtAwAAAAAAAAAAAJj7RPbIN/KLHJHz/36WNl9Rf/5s93HHN+ybdXfXe/V92/lb9uS577v6vit3Neu6oqzf2T0e5yp66nDsuZ+raPV/9Kbv80q/WQAAmgtZ1exzQDgAAA==
+  </data>
+ </layer>
+ <layer name="physics" width="60" height="60" opacity="0">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2VQRLEIAgEzb/z+H3BpgSHEcs+9C2ATRDfMcYLAADQjOdwMr67e77yr/Cdj1HMlSOH0ne1z9U58O171o6+irs3W3f3/VUQ8XXVwndujtTznK2r9F3tc9bXdd7bfRXzrI6p8u0Ivjpf9zxndvCp+yqbD198I7nV903hq6yl3s//8lX0rLtv5J86fCvnOepbdXdc+6pihjv7quJO289fcY63wLWvKurhG4txzfNqPaXvap+jvu7z4nuXr+JOKb/t/h45wTcWo5jnSJ5sXaWvos8zebJ18cUXX3zxvcP3pvf3NPCdizmZ3T0HAFDxA8tWquxAOAAA
   </data>
  </layer>
 </map>

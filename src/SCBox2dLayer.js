@@ -52,14 +52,8 @@ var SCBox2dLayer = cc.Layer.extend({
         // Construct a world object, which will hold and simulate the rigid bodies.
         this.world = new b2World(new b2Vec2(0, -10), true);
         this.world.SetContinuousPhysics(true);
-        	
-        //cc.log("SCBox2dLayer initWithMap Tile Property Test - coord.x/y properties = 0,0 " + map.getPointProperties("foreground", cc.p(0,0)).name);
+
         
-        for(var i=0; i<map.getMapSize().height; i++){
-	        for(var j=0; j<map.getMapSize().width; j++){
-		        cc.log("SCBox2dLayer initWithMap Tile Property Test - coord.x/y properties = " + j + ", " + i + " " + map.getTileProperties("foreground", cc.p(j,i)).name);
-	        }
-        }
         	
         	
    /*
@@ -114,29 +108,27 @@ var SCBox2dLayer = cc.Layer.extend({
         //create ground
         bodyDef.type = b2Body.b2_staticBody;
         fixDef.shape = new b2PolygonShape;
-        fixDef.shape.SetAsBox(20, 2);
+        fixDef.shape.SetAsBox(.5, .5);
         // upper
-        bodyDef.position.Set(10, screenSize.height / PTM_RATIO + 1.8);
-        this.world.CreateBody(bodyDef).CreateFixture(fixDef);
-        // bottom
-        //bodyDef.position.Set(10, -1.8);
-        bodyDef.position.Set(10, .4);
-        this.world.CreateBody(bodyDef).CreateFixture(fixDef);
-
-        fixDef.shape.SetAsBox(2, 14);
-        // left
-        bodyDef.position.Set(-1.8, 13);
-        this.world.CreateBody(bodyDef).CreateFixture(fixDef);
-        // right
-        bodyDef.position.Set(26.8, 13);
-        this.world.CreateBody(bodyDef).CreateFixture(fixDef);
+       // bodyDef.position.Set(10, screenSize.height / PTM_RATIO + 1.8);
+        //this.world.CreateBody(bodyDef).CreateFixture(fixDef);
+      
 
 
-        // Static box position test
-        fixDef.shape.SetAsBox(32 / PTM_RATIO, 32 / PTM_RATIO);
-        bodyDef.position.Set(100 / PTM_RATIO, 100 / PTM_RATIO);
-        this.world.CreateBody(bodyDef).CreateFixture(fixDef);
-
+        for(var i=0; i<map.getMapSize().height; i++){
+	        for(var j=0; j<map.getMapSize().width; j++){
+		       // if there is no tile or no proper tile properties, there will be errors unless you run checks first.
+		       var tileProps = map.getTileProperties("physics", cc.p(j,i));
+		       if(tileProps){
+			       if(tileProps.name && tileProps.name == "grass"){
+			       	bodyDef.position.Set(j, i);
+			       	this.world.CreateBody(bodyDef).CreateFixture(fixDef);
+				       
+			       }
+		       }
+	        }
+        }
+        
 
 
         //Set up sprite

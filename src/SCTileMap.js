@@ -54,8 +54,8 @@ var SCTileMap = cc.TMXTiledMap.extend({
     	
     	tilePointProperties = this.propertiesForGID(tileGID);
     	//cc.log(mapSize.height / tileSize.height);
-    	 cc.log("SCTileMap getTileProperties  tileCoord.x/y properties = " + tileX + ", " + tileY + " = "); 
-    	 //cc.log(this.getPointProperties("foreground", cc.p(tileX,tileY)).name);
+    	 //cc.log("SCTileMap getTileProperties  tileCoord.x/y properties = " + tileX + ", " + tileY + " = "); 
+    	 //cc.log(this.propertiesForGID(tileGID).name);
     	
     	return(tilePointProperties);  
    },
