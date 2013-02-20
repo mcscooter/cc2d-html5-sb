@@ -121,10 +121,25 @@ var SCBox2dLayer = cc.Layer.extend({
 		       var tileProps = map.getTileProperties("physics", cc.p(j,i));
 		       if(tileProps){
 			       if(tileProps.name && tileProps.name == "grass"){
-			       	bodyDef.position.Set(j, i);
-			       	this.world.CreateBody(bodyDef).CreateFixture(fixDef);
-				       
+			       	fixDef.shape.SetAsBox(.5, .5);
+			       	var pos = cc.p(j, i);
+			       	j++;
+			       	var shapeWidth = .5;
+			       	while(j<map.getMapSize().width){
+				       	tileProps = map.getTileProperties("physics", cc.p(j,i));
+				       	if(tileProps && tileProps.name && tileProps.name == "grass"){
+				       		shapeWidth += .5
+					       	fixDef.shape.SetAsBox(shapeWidth, .5);
+					       	pos = cc.p(pos.x + .5, pos.y);
+				       	}else{
+					       	break;
+				       	}
+				       	j++;
+			       	}
+			       	bodyDef.position.Set(pos.x, pos.y);
+				   	this.world.CreateBody(bodyDef).CreateFixture(fixDef);    
 			       }
+			       
 		       }
 	        }
         }
