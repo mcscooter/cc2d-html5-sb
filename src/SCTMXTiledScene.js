@@ -41,7 +41,7 @@ var SCTileLayer = cc.Layer.extend({
         var physicsLayer = new SCBox2dLayer();
         physicsLayer.initWithMap(tileMap);
         physicsLayer.setPosition(this.gameConfig.Box2dLayer.position);
-        this.gameLayer.addChild(physicsLayer, -1000, this.gameConfig.globals.TAG_BOX2D_LAYER);
+        this.gameLayer.addChild(physicsLayer, 1000, this.gameConfig.globals.TAG_BOX2D_LAYER);
        
        
        
@@ -204,7 +204,15 @@ var SCTileLayer = cc.Layer.extend({
        	
        	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER).move(mapTouchLocation);
        	
-       	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewSpriteWithCoords(touchLocation);
+       	
+       	
+       	
+       	// Test adding an entity to the physics world
+       	var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
+    	player.setPosition(this.gameConfig.player.startPosition);
+    	player.setID(this.gameConfig.globals.TAG_PLAYER);
+       	player.setTexture(this.gameConfig.player.carRight);
+       	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewSpriteWithCoords(cc.p(touchLocation.x - this.gameLayer.getPosition().x, touchLocation.y - this.gameLayer.getPosition().y ));
 
     },
     onTouchCancelled:function (touch, event) {

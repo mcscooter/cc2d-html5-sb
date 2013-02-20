@@ -1,7 +1,24 @@
 NEXT STEPS:
 
+- physics worls is off from graphics by a half block (16px) left and down
 
-- do next:
+
+- Use Box2D for solid collision and moving entities.
+- Use own tile physics loop for soft tile collisions.
+
+- Get box2d collisions to generate game callbacks
+
+
+
+
+
+
+
+
+
+
+
+- Old next steps from own collision:
 
 Make collision correction dependant on previous location and velocity
 Give all entities an ID (tag)

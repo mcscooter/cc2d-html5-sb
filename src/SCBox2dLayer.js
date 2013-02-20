@@ -53,8 +53,14 @@ var SCBox2dLayer = cc.Layer.extend({
         this.world = new b2World(new b2Vec2(0, -10), true);
         this.world.SetContinuousPhysics(true);
 
-        
-        	
+
+        // listen for beginning of all body collisions
+        var listener = new Box2D.Dynamics.b2ContactListener;
+        listener.BeginContact = function(contact) {
+         	cc.log("BOX2D Collision Contact Listener = ");
+         	cc.log(contact.GetFixtureA().GetBody().GetUserData());
+         }
+         this.world.SetContactListener(listener);
         	
    /*
 	    var bottomLeft = cc.p(position.x + hitboxVertices[0].x, position.y + hitboxVertices[0].y + 1);
@@ -178,6 +184,7 @@ var SCBox2dLayer = cc.Layer.extend({
         */
 
         //this.scheduleUpdate();
+   
         
         cc.log("Box2DTest Finished CTOR");
 
@@ -195,6 +202,8 @@ var SCBox2dLayer = cc.Layer.extend({
         var idx = (Math.random() > .5 ? 0 : 1);
         var idy = (Math.random() > .5 ? 0 : 1);
         var sprite = cc.Sprite.createWithTexture(batch.getTexture(), cc.rect(32 * idx, 32 * idy, 32, 32));
+        // scott, trying to add a name fo ID
+        sprite.SCName = "testName from Scott";
         batch.addChild(sprite);
 
         sprite.setPosition(cc.p(p.x, p.y));
