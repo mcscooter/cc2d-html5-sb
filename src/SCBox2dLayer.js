@@ -28,14 +28,10 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-var TAG_SPRITE_MANAGER = 1;
-var PTM_RATIO = 32;
-
 var SCBox2dLayer = cc.Layer.extend({
 	ctor:function () {
 		this._super();
-        this.gameConfig = new SCGameConfig();
-        
+        this.gameConfig = new SCGameConfig();        
     },
     
     initWithMap:function(map){
@@ -50,7 +46,7 @@ var SCBox2dLayer = cc.Layer.extend({
         var screenSize = cc.Director.getInstance().getWinSize();
 
         // Construct a world object, which will hold and simulate the rigid bodies.
-        this.world = new b2World(new b2Vec2(0, -10), true);
+        this.world = new b2World(new b2Vec2(this.gameConfig.Box2dLayer.gravityX, this.gameConfig.Box2dLayer.gravityY), true);
         this.world.SetContinuousPhysics(true);
 
 
@@ -61,63 +57,21 @@ var SCBox2dLayer = cc.Layer.extend({
          	cc.log(contact.GetFixtureA().GetBody().GetUserData());
          }
          this.world.SetContactListener(listener);
-        	
-   /*
-	    var bottomLeft = cc.p(position.x + hitboxVertices[0].x, position.y + hitboxVertices[0].y + 1);
-	    var topLeft = cc.p(position.x + hitboxVertices[3].x, position.y + hitboxVertices[3].y - 1);
-	    var blForegroundProperties = map.getPointProperties("foreground", bottomLeft);
-	    if(blForegroundProperties){
-		    if(blForegroundProperties.name == "grass" || blForegroundProperties.name == "house"){
-			     while(map.getPointProperties("foreground", bottomLeft).name == "grass" || map.getPointProperties("foreground", bottomLeft).name == "house"){
-				     position.x += .1;
-				     bottomLeft = cc.p(position.x + hitboxVertices[0].x, position.y + hitboxVertices[0].y + 1);
-			     }
-			     position.x = Math.floor(position.x);
-			     this.velocity.x = 0;
-		    }
-	    }
-	    
-	    var tlForegroundProperties = map.getPointProperties("foreground", topLeft);
-	    if(tlForegroundProperties){
-		    if(tlForegroundProperties.name == "grass" || tlForegroundProperties.name == "house"){
-			     while(map.getPointProperties("foreground", topLeft).name == "grass" || map.getPointProperties("foreground", topLeft).name == "house"){
-				     position.x += .1;
-				     topLeft = cc.p(position.x + hitboxVertices[3].x, position.y + hitboxVertices[3].y - 1);
-			     }
-			     position.x = Math.floor(position.x);
-			     this.velocity.x = 0;
-		    }
-	    }
-	*/
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
+           	 	
         	
         // Start creating the tile world rigid bodies
         var fixDef = new b2FixtureDef;
-        fixDef.density = 1.0;
-        fixDef.friction = 0.5;
-        fixDef.restitution = 0.2;
+        fixDef.density = this.gameConfig.Box2dLayer.tileBox.density;
+        fixDef.friction = this.gameConfig.Box2dLayer.tileBox.friction;
+        fixDef.restitution = this.gameConfig.Box2dLayer.tileBox.restitution;
 
         var bodyDef = new b2BodyDef;
 
-        //create ground
+        //create standard tile body
         bodyDef.type = b2Body.b2_staticBody;
         fixDef.shape = new b2PolygonShape;
-        fixDef.shape.SetAsBox(.5, .5);
-        // upper
-       // bodyDef.position.Set(10, screenSize.height / PTM_RATIO + 1.8);
-        //this.world.CreateBody(bodyDef).CreateFixture(fixDef);
+        fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
+
       
 
 
@@ -127,22 +81,22 @@ var SCBox2dLayer = cc.Layer.extend({
 		       var tileProps = map.getTileProperties("physics", cc.p(j,i));
 		       if(tileProps){
 			       if(tileProps.name && tileProps.name == "grass"){
-			       	fixDef.shape.SetAsBox(.5, .5);
+			       	fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
 			       	var pos = cc.p(j, i);
 			       	j++;
-			       	var shapeWidth = .5;
+			       	var shapeWidth = this.gameConfig.Box2dLayer.tileBox.diameter;
 			       	while(j<map.getMapSize().width){
 				       	tileProps = map.getTileProperties("physics", cc.p(j,i));
 				       	if(tileProps && tileProps.name && tileProps.name == "grass"){
-				       		shapeWidth += .5
-					       	fixDef.shape.SetAsBox(shapeWidth, .5);
-					       	pos = cc.p(pos.x + .5, pos.y);
+				       		shapeWidth += this.gameConfig.Box2dLayer.tileBox.diameter;
+					       	fixDef.shape.SetAsBox(shapeWidth, this.gameConfig.Box2dLayer.tileBox.center);
+					       	pos = cc.p(pos.x + this.gameConfig.Box2dLayer.tileBox.center, pos.y);
 				       	}else{
 					       	break;
 				       	}
 				       	j++;
 			       	}
-			       	bodyDef.position.Set(pos.x, pos.y);
+			       	bodyDef.position.Set(pos.x + this.gameConfig.Box2dLayer.tileBox.center, pos.y + this.gameConfig.Box2dLayer.tileBox.center);
 				   	this.world.CreateBody(bodyDef).CreateFixture(fixDef);    
 			       }
 			       
@@ -159,14 +113,16 @@ var SCBox2dLayer = cc.Layer.extend({
 
         this.addNewSpriteWithCoords(cc.p(screenSize.width / 2, screenSize.height / 2));
         
-        // attempt to draw debug using another canvas
-       var debugDraw = new b2DebugDraw();
+        if(this.gameConfig.Box2dLayer.debugDraw == true){
+        	// attempt to draw debug using another canvas
+        	var debugDraw = new b2DebugDraw();
 			debugDraw.SetSprite(document.getElementById("boxCanvas").getContext("2d"));
 			debugDraw.SetDrawScale(PTM_RATIO);
 			debugDraw.SetFillAlpha(0.5);
 			debugDraw.SetLineThickness(1.0);
 			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
 			this.world.SetDebugDraw(debugDraw);
+		}
 			
 			
 			
@@ -257,7 +213,9 @@ var SCBox2dLayer = cc.Layer.extend({
             }
         }
         
-         this.world.DrawDebugData();
+        if(this.gameConfig.Box2dLayer.debugDraw == true){
+         	this.world.DrawDebugData();
+         }
          //this.setPosition(cc.p(this.getPosition().x + .3, this.getPosition().y + .3));
          //this.world.position.Set(2,2);
 

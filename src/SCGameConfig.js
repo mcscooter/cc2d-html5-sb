@@ -51,7 +51,19 @@ var SCGameConfig = cc.Class.extend({
    					};
    					
    		this.Box2dLayer = {
-	   					"position":cc.p(0,0)	
+	   					"position":cc.p(0,0),
+	   					"debugDraw":true,
+	   					"PTM_RATIO":32,//point to meter ratio for Box2D
+	   					"gravityX":0,
+	   					"gravityY":-10,
+	   					tileBox:{ 	
+	   						"diameter":.5,
+	   						"center":.5, // anchor is in middle, this is corrected for in SCBox2DLayer
+	   						"density":1.0,
+	   						"friction":0.5,
+	   						"restitution":0.2
+	   					}
+	   					
 	   		
    		};
    					
@@ -76,7 +88,8 @@ var SCGameConfig = cc.Class.extend({
 						"TAG_MENU_BACKGROUND":12,
 						"TAG_MENU_TITLE":13,
 						"TAG_CAR_ENTITY":14,
-						"TAG_BOX2D_LAYER":15
+						"TAG_BOX2D_LAYER":15,
+						"TAG_SPRITE_MANAGER":16
    		};
    		
    		this.timer = {	
