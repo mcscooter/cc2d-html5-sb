@@ -1,18 +1,43 @@
 NEXT STEPS:
 
-- physics worls is off from graphics by a half block (16px) left and down
+New design pattern to try:
+- Read from tile map but do not display
+- Make phyiscs shapes for everything with graphics attached
+- Keep shapes for everything that is close to the screen
+- When player moves, check to see how far since last physics update. If far enough, check all active shapes for how close they are to screen. Release far away. Add ones close enough.
+
+- What to do about non-physics graphics?
+
+
+
+
+--------------------------------------------------------
+
+function for determining what shapes are needed in an area
+- reads from tiled, gets all shapes
+
+funciton for determining what already exists in as area (or just on stage?)
+- cycle through arrays that hold info on what is there.
+
+function for determining what is needed
+- calls previous functions and compares the lists
+
+function for determining what shapes are out of bounds
+- cycle through arrays of stuff on stage, see what is out of area
+
+
+would probably need to initially not use tile sinching for longer shapes. Might add that back later.
+
+--------------------------------------------------------
+
+
+Add 
 
 
 - Use Box2D for solid collision and moving entities.
-- Use own tile physics loop for soft tile collisions.
+- Use own tile physics loop for soft tile collisions. --- Scratch, should probably use BOX2D sensors instead
 
 - Get box2d collisions to generate game callbacks
-
-
-
-
-
-
 
 
 
