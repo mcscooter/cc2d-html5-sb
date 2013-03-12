@@ -57,7 +57,65 @@ var SCBox2dLayer = cc.Layer.extend({
          	cc.log(contact.GetFixtureA().GetBody().GetUserData());
          }
          this.world.SetContactListener(listener);
-           	 	
+       
+        this.makeTiles(map);
+        //this.makeTilesJoinX(map);
+
+
+        
+        // this is the test graphic for 
+        var mgr = cc.SpriteBatchNode.create(s_pathBlock, 150);
+        this.addChild(mgr, 0, TAG_SPRITE_MANAGER);
+
+        //Set up sprite for testing adding a sprite attached to a BOX2D shape (square for now)
+        this.addNewSpriteWithCoords(cc.p(screenSize.width / 2, screenSize.height / 2));
+        
+        
+        // add a physics debug draw visualization in a seperate canvas
+        if(this.gameConfig.Box2dLayer.debugDraw == true){
+        	// attempt to draw debug using another canvas
+        	var debugDraw = new b2DebugDraw();
+			debugDraw.SetSprite(document.getElementById("boxCanvas").getContext("2d"));
+			debugDraw.SetDrawScale(this.gameConfig.Box2dLayer.PTM_RATIO / 4);
+			debugDraw.SetFillAlpha(0.5);
+			debugDraw.SetLineThickness(1.0);
+			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+			this.world.SetDebugDraw(debugDraw);
+		}
+			
+			
+			
+		/* //currently doesn't work on cc2d HTML5 2.1. To reactivate also have to override draw() function and include this.world.DrawDebugData();
+		// Also, could try transforming this layer to see if it changes the view
+		// attempt to draw debug using Cocos2D
+		//set up debug draw
+        var debugDraw = new b2DebugDraw();
+        debugDraw.SetSprite(cc.renderContext);
+        debugDraw.SetDrawScale(this.gameConfig.Box2dLayer.PTM_RATIO);
+        debugDraw.SetFillAlpha(0.3);
+        debugDraw.SetLineThickness(1.0);
+        debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit | b2DebugDraw.e_centerOfMassBit);
+        this.world.SetDebugDraw(debugDraw);
+        */
+
+        //this.scheduleUpdate();
+   
+        
+        cc.log("Box2DTest Finished CTOR");
+
+    },
+    
+        // Create rigid bodies from tile map.
+   
+    makeTiles:function(map){
+	    var b2Vec2 = Box2D.Common.Math.b2Vec2
+            , b2BodyDef = Box2D.Dynamics.b2BodyDef
+            , b2Body = Box2D.Dynamics.b2Body
+            , b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+            , b2World = Box2D.Dynamics.b2World
+            , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+            , b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
+	        	 	
         	
         // Start creating the tile world rigid bodies
         var fixDef = new b2FixtureDef;
@@ -80,14 +138,60 @@ var SCBox2dLayer = cc.Layer.extend({
 		       // if there is no tile or no proper tile properties, there will be errors unless you run checks first.
 		       var tileProps = map.getTileProperties("physics", cc.p(j,i));
 		       if(tileProps){
-			       if(tileProps.name && tileProps.name == "grass"){
+			       if(tileProps.physics && tileProps.physics == "solid"){
+			       	fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
+			       	var pos = cc.p(j, i);
+			       	bodyDef.position.Set(pos.x + this.gameConfig.Box2dLayer.tileBox.center, pos.y + this.gameConfig.Box2dLayer.tileBox.center);
+				   	this.world.CreateBody(bodyDef).CreateFixture(fixDef);    
+			       }
+			       
+		       }
+	        }
+        }
+	    
+    },
+    
+    // Create rigid bodies from tile map.
+    // Make longer shapes on when consecutive horizontal tiles are solid.
+    makeTilesJoinX:function(map){
+	    var b2Vec2 = Box2D.Common.Math.b2Vec2
+            , b2BodyDef = Box2D.Dynamics.b2BodyDef
+            , b2Body = Box2D.Dynamics.b2Body
+            , b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+            , b2World = Box2D.Dynamics.b2World
+            , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+            , b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
+	        	 	
+        	
+        // Start creating the tile world rigid bodies
+        var fixDef = new b2FixtureDef;
+        fixDef.density = this.gameConfig.Box2dLayer.tileBox.density;
+        fixDef.friction = this.gameConfig.Box2dLayer.tileBox.friction;
+        fixDef.restitution = this.gameConfig.Box2dLayer.tileBox.restitution;
+
+        var bodyDef = new b2BodyDef;
+
+        //create standard tile body
+        bodyDef.type = b2Body.b2_staticBody;
+        fixDef.shape = new b2PolygonShape;
+        fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
+
+      
+
+
+        for(var i=0; i<map.getMapSize().height; i++){
+	        for(var j=0; j<map.getMapSize().width; j++){
+		       // if there is no tile or no proper tile properties, there will be errors unless you run checks first.
+		       var tileProps = map.getTileProperties("physics", cc.p(j,i));
+		       if(tileProps){
+			       if(tileProps.physics && tileProps.physics == "solid"){
 			       	fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
 			       	var pos = cc.p(j, i);
 			       	j++;
 			       	var shapeWidth = this.gameConfig.Box2dLayer.tileBox.diameter;
 			       	while(j<map.getMapSize().width){
 				       	tileProps = map.getTileProperties("physics", cc.p(j,i));
-				       	if(tileProps && tileProps.name && tileProps.name == "grass"){
+				       	if(tileProps && tileProps.physics && tileProps.physics == "solid"){
 				       		shapeWidth += this.gameConfig.Box2dLayer.tileBox.diameter;
 					       	fixDef.shape.SetAsBox(shapeWidth, this.gameConfig.Box2dLayer.tileBox.center);
 					       	pos = cc.p(pos.x + this.gameConfig.Box2dLayer.tileBox.center, pos.y);
@@ -103,47 +207,7 @@ var SCBox2dLayer = cc.Layer.extend({
 		       }
 	        }
         }
-        
-
-
-        //Set up sprite
-
-        var mgr = cc.SpriteBatchNode.create(s_pathBlock, 150);
-        this.addChild(mgr, 0, TAG_SPRITE_MANAGER);
-
-        this.addNewSpriteWithCoords(cc.p(screenSize.width / 2, screenSize.height / 2));
-        
-        if(this.gameConfig.Box2dLayer.debugDraw == true){
-        	// attempt to draw debug using another canvas
-        	var debugDraw = new b2DebugDraw();
-			debugDraw.SetSprite(document.getElementById("boxCanvas").getContext("2d"));
-			debugDraw.SetDrawScale(PTM_RATIO);
-			debugDraw.SetFillAlpha(0.5);
-			debugDraw.SetLineThickness(1.0);
-			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
-			this.world.SetDebugDraw(debugDraw);
-		}
-			
-			
-			
-		/* //currently doesn't work on cc2d HTML5 2.1. To reactivate also have to override draw() function and include this.world.DrawDebugData();
-		// Also, could try transforming this layer to see if it changes the view
-		// attempt to draw debug using Cocos2D
-		//set up debug draw
-        var debugDraw = new b2DebugDraw();
-        debugDraw.SetSprite(cc.renderContext);
-        debugDraw.SetDrawScale(PTM_RATIO);
-        debugDraw.SetFillAlpha(0.3);
-        debugDraw.SetLineThickness(1.0);
-        debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit | b2DebugDraw.e_centerOfMassBit);
-        this.world.SetDebugDraw(debugDraw);
-        */
-
-        //this.scheduleUpdate();
-   
-        
-        cc.log("Box2DTest Finished CTOR");
-
+	    
     },
 
     addNewSpriteWithCoords:function (p) {
@@ -173,7 +237,7 @@ var SCBox2dLayer = cc.Layer.extend({
 
         var bodyDef = new b2BodyDef();
         bodyDef.type = b2Body.b2_dynamicBody;
-        bodyDef.position.Set(p.x / PTM_RATIO, p.y / PTM_RATIO);
+        bodyDef.position.Set(p.x / this.gameConfig.Box2dLayer.PTM_RATIO, p.y / this.gameConfig.Box2dLayer.PTM_RATIO);
         bodyDef.userData = sprite;
         var body = this.world.CreateBody(bodyDef);
 
@@ -207,7 +271,7 @@ var SCBox2dLayer = cc.Layer.extend({
             if (b.GetUserData() != null) {
                 //Synchronize the AtlasSprites position and rotation with the corresponding body
                 var myActor = b.GetUserData();
-                myActor.setPosition(cc.p(b.GetPosition().x * PTM_RATIO, b.GetPosition().y * PTM_RATIO));
+                myActor.setPosition(cc.p(b.GetPosition().x * this.gameConfig.Box2dLayer.PTM_RATIO, b.GetPosition().y * this.gameConfig.Box2dLayer.PTM_RATIO));
                 myActor.setRotation(-1 * cc.RADIANS_TO_DEGREES(b.GetAngle()));
                 //console.log(b.GetAngle());
             }

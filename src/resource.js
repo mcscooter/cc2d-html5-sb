@@ -25,6 +25,7 @@ var s_MenuTitle = "res/images/menu/title.png";
 var s_TestTilesheet = "res/tilemaps/test-tilemap-tilesheet.png";
 var s_TestTilesheet2 = "res/tilemaps/fixed-ortho-test2.png";
 var s_MetaTilesheet = "res/tilemaps/fixed-ortho-test2.png";
+var s_tilesheet3 = "res/tilemaps/tileset3.png";
 
 var s_pathBlock = "res/images/physics/blocks.png";
 
@@ -47,6 +48,7 @@ var g_ressources = [
     {type:"image", src:s_TestTilesheet},
     {type:"image", src:s_TestTilesheet2},
     {type:"image", src:s_MetaTilesheet},
+    {type:"image", src:s_tilesheet3},    
     {type:"image", src:s_MenuBG},
     {type:"image", src:s_MenuPlay},
     {type:"image", src:s_MenuInstructions},

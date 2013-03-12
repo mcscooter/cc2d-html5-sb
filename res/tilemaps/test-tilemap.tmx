@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="60" height="60" tilewidth="32" tileheight="32">
- <tileset firstgid="1" name="foreground" tilewidth="32" tileheight="32" spacing="2" margin="2">
+ <tileset firstgid="1" name="foreground2" tilewidth="32" tileheight="32" spacing="2" margin="2">
   <image source="test-tilemap-tilesheet.png" width="640" height="400"/>
   <tile id="0">
    <properties>
@@ -184,6 +184,16 @@
     <property name="loan" value="300000"/>
    </properties>
   </tile>
+  <tile id="72">
+   <properties>
+    <property name="physics" value="solid"/>
+   </properties>
+  </tile>
+  <tile id="73">
+   <properties>
+    <property name="physics" value="empty"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="background" width="60" height="60">
   <data encoding="base64" compression="gzip">
@@ -205,9 +215,9 @@
    H4sIAAAAAAAAA+3VQQqEMAwFUK81zuj9j2UWUygl1W4j78EHkSwaPtVtAwAAAAAAAAAAAJj7RPbIN/KLHJHz/36WNl9Rf/5s93HHN+ybdXfXe/V92/lb9uS577v6vit3Neu6oqzf2T0e5yp66nDsuZ+raPV/9Kbv80q/WQAAmgtZ1exzQDgAAA==
   </data>
  </layer>
- <layer name="physics" width="60" height="60" opacity="0">
+ <layer name="physics" width="60" height="60">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2VQRLEIAgEzb/z+H3BpgSHEcs+9C2ATRDfMcYLAADQjOdwMr67e77yr/Cdj1HMlSOH0ne1z9U58O171o6+irs3W3f3/VUQ8XXVwndujtTznK2r9F3tc9bXdd7bfRXzrI6p8u0Ivjpf9zxndvCp+yqbD198I7nV903hq6yl3s//8lX0rLtv5J86fCvnOepbdXdc+6pihjv7quJO289fcY63wLWvKurhG4txzfNqPaXvap+jvu7z4nuXr+JOKb/t/h45wTcWo5jnSJ5sXaWvos8zebJ18cUXX3zxvcP3pvf3NPCdizmZ3T0HAFDxA8tWquxAOAAA
+   H4sIAAAAAAAAA+2VQRLEIAgE/V7y/wftCzYlOIxY9qFvAWyC+I4xXgAAgGY8h5Px3d3zlX+F73yMYq4cOZS+q32uzoFv37N29FXcvdm6u++vgoivqxa+c3OknudsXaXvap+zvq7z3u6rmGd1TJVvR/DV+brnObODT91X2Xz44hvJrb5vCl9lLfV+/pevomfdfSP/1OFbOc9R36q749pXFTPc2VcVd9p+/opzvAWufVVRD99YjGueV+spfVf7HPV1nxffu3wVd0r5bff3yAm+sRjFPEfyZOsqfRV9nsmTrYsvvvjii+8dvje9v6eB71zMyezuOQCAih/KEEQWQDgAAA==
   </data>
  </layer>
 </map>

@@ -1,6 +1,15 @@
 //	Scott Cummings 2012
 // 
 
+// Some items are defined in cocos2d.js due to their being needed before SCGameConfig.js is loaded. These are:
+//	  COCOS2D_DEBUG:2, //0 to turn debug off, 1 for basic debug, and 2 for full debug
+//        box2d:BOOL,
+//        showFPS:BOOL,
+//        frameRate:INT,
+//        loadExtension:BOOL,
+//        tag:STRING,
+//        engineDir:STRING
+
 
 var SCGameConfig = cc.Class.extend({
    
