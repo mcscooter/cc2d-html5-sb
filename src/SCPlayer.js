@@ -56,7 +56,9 @@ var SCPlayer = SCEntity.extend({
    
    mapTouched:function(touchArgs){
 	   cc.log("SCPlayer mapTouched()");  
-	   cc.log("\t touchArgs.touch.x, y = " + touchArgs.mapTouchLocation.x + ", " + touchArgs.mapTouchLocation.y);
+	   // can add this back to see touch position
+	   cc.log("\t touchArgs.touch.x, y = " + touchArgs.touchLocation.x + ", " + touchArgs.touchLocation.y);
+	   cc.log("\t touchArgs.mapTouch.x, y = " + touchArgs.mapTouchLocation.x + ", " + touchArgs.mapTouchLocation.y);
    },
    
    updateLogic:function(){
