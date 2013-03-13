@@ -64,7 +64,6 @@ var SCGameMenu = cc.Layer.extend({
         //director.purgeDirector();
         director.replaceScene(new Level1);
         cc.log("Director.isCleanupToScene = " + director.isSendCleanupToScene());
-	    
     }
 });
 
