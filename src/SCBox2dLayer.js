@@ -59,7 +59,7 @@ var SCBox2dLayer = cc.Layer.extend({
          this.world.SetContactListener(listener);
        
         // take tile map and make physics shapes.
-        this.makeTiles(map, false);
+        this.makeTiles(map, false, cc.p(20,40), cc.p(40,20));
        
 
 
@@ -109,7 +109,9 @@ var SCBox2dLayer = cc.Layer.extend({
     
     // Create rigid bodies from tile map.
     // If joinX or Y are true, ake longer shapes on when consecutive tiles are solid.
-    makeTiles:function(map, joinX){
+    //
+    //		
+    makeTiles:function(map, joinX, bottomLeft, topRight){
 	    var b2Vec2 = Box2D.Common.Math.b2Vec2
             , b2BodyDef = Box2D.Dynamics.b2BodyDef
             , b2Body = Box2D.Dynamics.b2Body
@@ -132,11 +134,27 @@ var SCBox2dLayer = cc.Layer.extend({
         fixDef.shape = new b2PolygonShape;
         fixDef.shape.SetAsBox(this.gameConfig.Box2dLayer.tileBox.diameter, this.gameConfig.Box2dLayer.tileBox.center);
 
-      
 
-
-        for(var i=0; i<map.getMapSize().height; i++){
-	        for(var j=0; j<map.getMapSize().width; j++){
+        // check draw area for being within the tile map
+        if(bottomLeft.x<0){
+	        bottomLeft.x = 0;
+        }
+        if(bottomLeft.y>map.getMapSize().height){
+	        bottomLeft.y = map.getMapSize().height;
+        }
+        if(topRight.x>map.getMapSize().width){
+	        topRight.x = map.getMapSize.width;
+        }
+        if(topRight.y<0){
+	        topRight.y = 0;
+        }
+        
+        
+        // i=y, j=x. Lower y numbers are higher up the map
+       // for(var i=0; i<map.getMapSize().height; i++){
+	     //   for(var j=0; j<map.getMapSize().width; j++){
+	     for(var i=bottomLeft.x; i<topRight.x; i++){
+	        for(var j=topRight.y; j<bottomLeft.y; j++){
 		       // if there is no tile or no proper tile properties, there will be errors unless you run checks first.
 		       var tileProps = map.getTileProperties("physics", cc.p(j,i));
 		       if(tileProps){
@@ -249,19 +267,25 @@ var SCBox2dLayer = cc.Layer.extend({
     	var topLeftTilePoint = cc.p(Math.floor(topLeftMapPoint.x / tileSize.width), Math.floor(mapSizeTiles.height - topLeftMapPoint.y / tileSize.height));
     	var bottomLeftWorldPoint = cc.p(0 - this.gameConfig.Box2dLayer.physicsWindowMargin.x, 0 - this.gameConfig.Box2dLayer.physicsWindowMargin.y);
     	var bottomLeftMapPoint = tileMap.convertToNodeSpace(bottomLeftWorldPoint);
+    	var bottomLeftTilePoint = cc.p(Math.floor(bottomLeftMapPoint.x / tileSize.width), Math.floor(mapSizeTiles.height - bottomLeftMapPoint.y / tileSize.height));
     	var topRightWorldPoint = cc.p(gameSize.width + this.gameConfig.Box2dLayer.physicsWindowMargin.x, gameSize.height + this.gameConfig.Box2dLayer.physicsWindowMargin.y);
     	var topRightMapPoint = tileMap.convertToNodeSpace(topRightWorldPoint);
+    	var topRightTilePoint = cc.p(Math.floor(topRightMapPoint.x / tileSize.width), Math.floor(mapSizeTiles.height - topRightMapPoint.y / tileSize.height));
     	var bottomRightWorldPoint = cc.p(gameSize.width + this.gameConfig.Box2dLayer.physicsWindowMargin.x, 0 - this.gameConfig.Box2dLayer.physicsWindowMargin.y);
     	var bottomRightMapPoint = tileMap.convertToNodeSpace(bottomRightWorldPoint);
-		cc.log("SCBox2DLayer getPhysicsUpdateWindow() topLeftWorldPoint.x/y = " + topLeftWorldPoint.x + " " + topLeftWorldPoint.y);
-		cc.log("SCBox2DLayer getPhysicsUpdateWindow() topLeftMapPoint.x/y = " + topLeftMapPoint.x + " " + topLeftMapPoint.y);
+    	var bottomRightTilePoint = cc.p(Math.floor(bottomRightMapPoint.x / tileSize.width), Math.floor(mapSizeTiles.height - bottomRightMapPoint.y / tileSize.height));
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() topLeftWorldPoint.x/y = " + topLeftWorldPoint.x + " " + topLeftWorldPoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() topLeftMapPoint.x/y = " + topLeftMapPoint.x + " " + topLeftMapPoint.y);
 		cc.log("SCBox2DLayer getPhysicsUpdateWindow() topLeftTilePoint.x/y = " + topLeftTilePoint.x + " " + topLeftTilePoint.y);
-		cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomLeftWorldPoint.x/y = " + bottomLeftWorldPoint.x + " " + bottomLeftWorldPoint.y);
-		cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomLeftMapPoint.x/y = " + bottomLeftMapPoint.x + " " + bottomLeftMapPoint.y);
-		cc.log("SCBox2DLayer getPhysicsUpdateWindow() topRightWorldPoint.x/y = " + topRightWorldPoint.x + " " + topRightWorldPoint.y);
-		cc.log("SCBox2DLayer getPhysicsUpdateWindow() topRightMapPoint.x/y = " + topRightMapPoint.x + " " + topRightMapPoint.y);
-		cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomRightWorldPoint.x/y = " + bottomRightWorldPoint.x + " " + bottomRightWorldPoint.y);
-		cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomRightMapPoint.x/y = " + bottomRightMapPoint.x + " " + bottomRightMapPoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomLeftWorldPoint.x/y = " + bottomLeftWorldPoint.x + " " + bottomLeftWorldPoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomLeftMapPoint.x/y = " + bottomLeftMapPoint.x + " " + bottomLeftMapPoint.y);
+		cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomLeftTilePoint.x/y = " + bottomLeftTilePoint.x + " " + bottomLeftTilePoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() topRightWorldPoint.x/y = " + topRightWorldPoint.x + " " + topRightWorldPoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() topRightMapPoint.x/y = " + topRightMapPoint.x + " " + topRightMapPoint.y);
+		cc.log("SCBox2DLayer getPhysicsUpdateWindow() topRightTilePoint.x/y = " + topRightTilePoint.x + " " + topRightTilePoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomRightWorldPoint.x/y = " + bottomRightWorldPoint.x + " " + bottomRightWorldPoint.y);
+		//cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomRightMapPoint.x/y = " + bottomRightMapPoint.x + " " + bottomRightMapPoint.y);
+		cc.log("SCBox2DLayer getPhysicsUpdateWindow() bottomRightTilePoint.x/y = " + bottomRightTilePoint.x + " " + bottomRightTilePoint.y);
 		
 		
 	   	    
