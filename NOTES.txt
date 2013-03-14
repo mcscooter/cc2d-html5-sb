@@ -10,13 +10,15 @@ New design pattern to try:
 
 
 
+- MAKE THE PLAYER A PHYSICS SHAPE
+
 
 --------------------------------------------------------
 
 function for determining what shapes are needed in an area
 - reads from tiled, gets all shapes
 
-funciton for determining what already exists in as area (or just on stage?)
+function for determining what already exists in as area (or just on stage?)
 - cycle through arrays that hold info on what is there.
 
 function for determining what is needed

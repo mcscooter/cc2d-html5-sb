@@ -59,7 +59,7 @@ var SCBox2dLayer = cc.Layer.extend({
          this.world.SetContactListener(listener);
        
         // take tile map and make physics shapes.
-        this.makeTiles(map, false, cc.p(20,40), cc.p(40,20));
+        this.makeTiles(map, false, cc.p(-100,-110), cc.p(4000,2000));
        
 
 
@@ -110,7 +110,7 @@ var SCBox2dLayer = cc.Layer.extend({
     // Create rigid bodies from tile map.
     // If joinX or Y are true, ake longer shapes on when consecutive tiles are solid.
     //
-    //		
+    //		Might need to reverse #'s for Y since tileMaps have Y inverted (y=0 is top of map)
     makeTiles:function(map, joinX, bottomLeft, topRight){
 	    var b2Vec2 = Box2D.Common.Math.b2Vec2
             , b2BodyDef = Box2D.Dynamics.b2BodyDef
@@ -139,22 +139,24 @@ var SCBox2dLayer = cc.Layer.extend({
         if(bottomLeft.x<0){
 	        bottomLeft.x = 0;
         }
-        if(bottomLeft.y>map.getMapSize().height){
-	        bottomLeft.y = map.getMapSize().height;
+        if(topRight.y>map.getMapSize().height){
+        	cc.log("SCBox2DLayer makeTiles topRight.y > map");
+	        topRight.y = map.getMapSize().height;
+	        cc.log("SCBox2DLayer makeTiles topRight.y = " + topRight.y);
         }
         if(topRight.x>map.getMapSize().width){
-	        topRight.x = map.getMapSize.width;
+        cc.log("SCBox2DLayer makeTiles topRight.x > map");
+	        topRight.x = map.getMapSize().width;
+	        cc.log("SCBox2DLayer makeTiles topRight.x = " + topRight.x);
         }
-        if(topRight.y<0){
-	        topRight.y = 0;
+        if(bottomLeft.y<0){
+	        bottomLeft.y = 0;
         }
         
         
-        // i=y, j=x. Lower y numbers are higher up the map
-       // for(var i=0; i<map.getMapSize().height; i++){
-	     //   for(var j=0; j<map.getMapSize().width; j++){
-	     for(var i=bottomLeft.x; i<topRight.x; i++){
-	        for(var j=topRight.y; j<bottomLeft.y; j++){
+        // i=y, j=x. Might need to reverse #'s for Y since tileMaps have Y inverted (y=0 is top of map)
+	     for(var i=bottomLeft.y; i<topRight.y; i++){
+	        for(var j=bottomLeft.x; j<topRight.x; j++){
 		       // if there is no tile or no proper tile properties, there will be errors unless you run checks first.
 		       var tileProps = map.getTileProperties("physics", cc.p(j,i));
 		       if(tileProps){
@@ -217,6 +219,51 @@ var SCBox2dLayer = cc.Layer.extend({
         bodyDef.type = b2Body.b2_dynamicBody;
         bodyDef.position.Set(p.x / this.gameConfig.Box2dLayer.PTM_RATIO, p.y / this.gameConfig.Box2dLayer.PTM_RATIO);
         bodyDef.userData = sprite;
+        var body = this.world.CreateBody(bodyDef);
+
+        // Define another box shape for our dynamic body.
+        var dynamicBox = new b2PolygonShape();
+        dynamicBox.SetAsBox(0.5, 0.5);//These are mid points for our 1m box
+
+        // Define the dynamic body fixture.
+        var fixtureDef = new b2FixtureDef();
+        fixtureDef.shape = dynamicBox;
+        fixtureDef.density = 1.0;
+        fixtureDef.friction = 0.3;
+        body.CreateFixture(fixtureDef);
+
+    },
+    
+        addNewSpriteWithCoordsNew:function (p, testSprite) {
+        //UXLog(L"Add sprite %0.2f x %02.f",p.x,p.y);
+        //var batch = this.getChildByTag(TAG_SPRITE_MANAGER);
+        // correct for world movement
+        p.x = p.x - this.getPosition().x;
+        p.y = p.y - this.getPosition().y;
+        cc.log("addNewSpriteWithCoordsNew:function (p) p.x/y = " + p.x + " " + p.y);
+        //We have a 64x64 sprite sheet with 4 different 32x32 images.  The following code is
+        //just randomly picking one of the images
+        //var idx = (Math.random() > .5 ? 0 : 1);
+        //var idy = (Math.random() > .5 ? 0 : 1);
+        //var sprite = cc.Sprite.createWithTexture(batch.getTexture(), cc.rect(32 * idx, 32 * idy, 32, 32));
+        // scott, trying to add a name fo ID
+        //sprite.SCName = "testName from Scott";
+        //batch.addChild(sprite);
+
+        testSprite.setPosition(cc.p(p.x, p.y));
+        this.addChild(testSprite);
+
+        // Define the dynamic body.
+        //Set up a 1m squared box in the physics world
+        var b2BodyDef = Box2D.Dynamics.b2BodyDef
+            , b2Body = Box2D.Dynamics.b2Body
+            , b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+            , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
+
+        var bodyDef = new b2BodyDef();
+        bodyDef.type = b2Body.b2_dynamicBody;
+        bodyDef.position.Set(p.x / this.gameConfig.Box2dLayer.PTM_RATIO, p.y / this.gameConfig.Box2dLayer.PTM_RATIO);
+        bodyDef.userData = testSprite;
         var body = this.world.CreateBody(bodyDef);
 
         // Define another box shape for our dynamic body.

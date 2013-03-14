@@ -67,6 +67,8 @@ var SCTileLayer = cc.Layer.extend({
     	entities.push(player);
     	physicsEntities.push(player);
     	this.gameLayer.addChild(player, 99, this.gameConfig.globals.TAG_PLAYER);
+       	
+       	
        	//this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER).setPosition(this.gameConfig.player.startPosition);
        	
        	// Make a car entity
@@ -76,8 +78,8 @@ var SCTileLayer = cc.Layer.extend({
     	carEntity.setID(this.gameConfig.globals.TAG_CAR_ENTITY);
     	entities.push(carEntity);
     	physicsEntities.push(carEntity);
-    	this.gameLayer.addChild(carEntity, 100, this.gameConfig.globals.TAG_CAR_ENTITY);
-       
+    	//this.gameLayer.addChild(carEntity, 100, this.gameConfig.globals.TAG_CAR_ENTITY);
+    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewSpriteWithCoordsNew(cc.p(200,200),carEntity);
        	
        	this.timer = new SCTimer();
        	this.timer.setPosition(this.gameConfig.timer.position);
