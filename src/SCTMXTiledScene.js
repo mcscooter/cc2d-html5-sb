@@ -188,19 +188,20 @@ var SCTileLayer = cc.Layer.extend({
     	
     	// send touch event
     	var touchArgs = new Object();
+    	touchArgs.touchLocation = touchLocation
     	touchArgs.mapTouchLocation = mapTouchLocation;
     	var touchEvent = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this, touchArgs);
        	this.mediator.send(touchEvent);
     	
     	// send touch event to mediator
     	// test sending an arbitrary object to the mediator to be sent to the callback
-    	var args = new Object();
-    	args.touchLocation = touchLocation;
-    	args.mapTouchLocation = mapTouchLocation;
-    	var event = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this.gameLayer, args);
-       	this.mediator.send(event);
-       	var event2 = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this.gameLayer, args);
-       	this.mediator.send(event2);
+    	//var args = new Object();
+    	//args.touchLocation = touchLocation;
+    	//args.mapTouchLocation = mapTouchLocation;
+    	//var event = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this.gameLayer, args);
+       	//this.mediator.send(event);
+       	//var event2 = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this.gameLayer, args);
+       	//this.mediator.send(event2);
        	
        	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER).move(mapTouchLocation);
        	
@@ -208,12 +209,18 @@ var SCTileLayer = cc.Layer.extend({
        	
        	
        	// Test adding an entity to the physics world
+       	// doesn't currently work
        	var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
     	player.setPosition(this.gameConfig.player.startPosition);
     	player.setID(this.gameConfig.globals.TAG_PLAYER);
        	player.setTexture(this.gameConfig.player.carRight);
-       	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewSpriteWithCoords(cc.p(touchLocation.x - this.gameLayer.getPosition().x, touchLocation.y - this.gameLayer.getPosition().y ));
+       	// add this back for testing adding a physics shape
+       	//this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewSpriteWithCoords(cc.p(touchLocation.x - this.gameLayer.getPosition().x, touchLocation.y - this.gameLayer.getPosition().y ));
 
+       	// a test for updating the physics shapes in the world
+       	// will eventually call this when the game screen has moved enough or state has otherwise changed that would cause a need to update.
+       	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getPhysicsUpdateWindow(this.gameLayer.getPosition(), tileMap);
+    
     },
     onTouchCancelled:function (touch, event) {
     },
