@@ -59,7 +59,7 @@ var SCBox2dLayer = cc.Layer.extend({
          this.world.SetContactListener(listener);
        
         // take tile map and make physics shapes.
-        this.makeTiles(map, false, cc.p(-100,-110), cc.p(4000,2000));
+        this.makeTiles(map, true, cc.p(-100,-110), cc.p(30,20));
        
 
 
@@ -167,7 +167,7 @@ var SCBox2dLayer = cc.Layer.extend({
 			       	if(joinX == true){
 			       		j++;
 			       		var shapeWidth = this.gameConfig.Box2dLayer.tileBox.diameter;
-			       		while(j<map.getMapSize().width){
+			       		while(j<topRight.x){
 				       		tileProps = map.getTileProperties("physics", cc.p(j,i));
 				       		if(tileProps && tileProps.physics && tileProps.physics == "solid"){
 				       			shapeWidth += this.gameConfig.Box2dLayer.tileBox.diameter;
