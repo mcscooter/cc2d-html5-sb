@@ -357,40 +357,47 @@ var SCBox2dLayer = cc.Layer.extend({
             if (b.GetUserData() != null) {
                 //Synchronize the AtlasSprites position and rotation with the corresponding body
                 var myActor = b.GetUserData();
-                myActor.setPosition(cc.p(b.GetPosition().x * this.gameConfig.Box2dLayer.PTM_RATIO, b.GetPosition().y * this.gameConfig.Box2dLayer.PTM_RATIO));
+                // if it is the player -- needs to be moved to player entity
+                if(myActor.ID && myActor.ID == this.gameConfig.globals.TAG_PLAYER){
+                	
+                	b.SetAwake(true);
+                	b.SetAngle(0);
+                	b.SetAngularVelocity(0);
+                	
+                	if(myActor.state && myActor.state.movementDirection){
+                		cc.log("SCBox2DLayer update() myActor.state.movementDirection = " + myActor.state.movementDirection);
+                		if(myActor.state.movementDirection == "up"){
+	                		cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"up\"");
+	                		var force = new b2Vec2(0,10);
+	                		b.SetAwake(true);
+	                		b.SetLinearVelocity(force);
+	                	
+	                	}
+	                	if(myActor.state.movementDirection == "right"){
+	                		cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"right\"");
+	                		var force = new b2Vec2(10,0);
+	                		b.SetAwake(true);
+	                		b.SetLinearVelocity(force);
+	                	
+	                	}
+	                	if(myActor.state.movementDirection == "left"){
+	                		cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"left\"");
+	                		var force = new b2Vec2(-10,0);
+	                		b.SetAwake(true);
+	                		b.SetLinearVelocity(force);
+	                	
+	                	}
+	                	if(myActor.state.movementDirection == "down"){
+	                		cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"down\"");
+	                		var force = new b2Vec2(0,-10);
+	                		b.SetAwake(true);
+	                		b.SetLinearVelocity(force);
+	                	
+	                	}
+	                }
+	             }
+	            myActor.setPosition(cc.p(b.GetPosition().x * this.gameConfig.Box2dLayer.PTM_RATIO, b.GetPosition().y * this.gameConfig.Box2dLayer.PTM_RATIO));
                 myActor.setRotation(-1 * cc.RADIANS_TO_DEGREES(b.GetAngle()));
-                //console.log(b.GetAngle());
-                if(myActor.state && myActor.state.movementDirection){
-                	cc.log("SCBox2DLayer update() myActor.state.movementDirection = " + myActor.state.movementDirection);
-                	if(myActor.state.movementDirection == "up"){
-	                	cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"up\"");
-	                	var force = new b2Vec2(0,10);
-                        b.SetAwake(true);
-                        b.SetLinearVelocity(force);
-	                	
-                	}
-                	if(myActor.state.movementDirection == "right"){
-	                	cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"right\"");
-	                	var force = new b2Vec2(10,0);
-                        b.SetAwake(true);
-                        b.SetLinearVelocity(force);
-	                	
-                	}
-                	if(myActor.state.movementDirection == "left"){
-	                	cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"left\"");
-	                	var force = new b2Vec2(-10,0);
-                        b.SetAwake(true);
-                        b.SetLinearVelocity(force);
-	                	
-                	}
-                	if(myActor.state.movementDirection == "down"){
-	                	cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"down\"");
-	                	var force = new b2Vec2(0,-10);
-                        b.SetAwake(true);
-                        b.SetLinearVelocity(force);
-	                	
-                	}
-                }
             }
         }
         

@@ -1,7 +1,11 @@
 NEXT STEPS:
 
+
+Move player physics logic to player entity
+
+
 New design pattern to try:
-- Read from tile map but do not display
+- Read from tile map but do not display?????
 - Make phyiscs shapes for everything with graphics attached
 - Keep shapes for everything that is close to the screen
 - When player moves, check to see how far since last physics update. If far enough, check all active shapes for how close they are to screen. Release far away. Add ones close enough.
@@ -10,7 +14,6 @@ New design pattern to try:
 
 
 
-- MAKE THE PLAYER A PHYSICS SHAPE
 
 
 --------------------------------------------------------
