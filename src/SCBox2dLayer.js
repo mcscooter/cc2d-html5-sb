@@ -140,14 +140,14 @@ var SCBox2dLayer = cc.Layer.extend({
 	        bottomLeft.x = 0;
         }
         if(topRight.y>map.getMapSize().height){
-        	cc.log("SCBox2DLayer makeTiles topRight.y > map");
+        	//cc.log("SCBox2DLayer makeTiles topRight.y > map");
 	        topRight.y = map.getMapSize().height;
-	        cc.log("SCBox2DLayer makeTiles topRight.y = " + topRight.y);
+	        //cc.log("SCBox2DLayer makeTiles topRight.y = " + topRight.y);
         }
         if(topRight.x>map.getMapSize().width){
-        cc.log("SCBox2DLayer makeTiles topRight.x > map");
+        	//cc.log("SCBox2DLayer makeTiles topRight.x > map");
 	        topRight.x = map.getMapSize().width;
-	        cc.log("SCBox2DLayer makeTiles topRight.x = " + topRight.x);
+	        //cc.log("SCBox2DLayer makeTiles topRight.x = " + topRight.x);
         }
         if(bottomLeft.y<0){
 	        bottomLeft.y = 0;
@@ -234,13 +234,13 @@ var SCBox2dLayer = cc.Layer.extend({
 
     },
     
-        addNewSpriteWithCoordsNew:function (p, testSprite) {
+        addNewEntity:function (p, newEntity) {
         //UXLog(L"Add sprite %0.2f x %02.f",p.x,p.y);
         //var batch = this.getChildByTag(TAG_SPRITE_MANAGER);
         // correct for world movement
         p.x = p.x - this.getPosition().x;
         p.y = p.y - this.getPosition().y;
-        cc.log("addNewSpriteWithCoordsNew:function (p) p.x/y = " + p.x + " " + p.y);
+        //cc.log("addNewSpriteWithCoordsNew:function (p) p.x/y = " + p.x + " " + p.y);
         //We have a 64x64 sprite sheet with 4 different 32x32 images.  The following code is
         //just randomly picking one of the images
         //var idx = (Math.random() > .5 ? 0 : 1);
@@ -250,8 +250,8 @@ var SCBox2dLayer = cc.Layer.extend({
         //sprite.SCName = "testName from Scott";
         //batch.addChild(sprite);
 
-        testSprite.setPosition(cc.p(p.x, p.y));
-        this.addChild(testSprite);
+        newEntity.setPosition(cc.p(p.x, p.y));
+        this.addChild(newEntity, 100, newEntity.getID());
 
         // Define the dynamic body.
         //Set up a 1m squared box in the physics world
@@ -263,7 +263,7 @@ var SCBox2dLayer = cc.Layer.extend({
         var bodyDef = new b2BodyDef();
         bodyDef.type = b2Body.b2_dynamicBody;
         bodyDef.position.Set(p.x / this.gameConfig.Box2dLayer.PTM_RATIO, p.y / this.gameConfig.Box2dLayer.PTM_RATIO);
-        bodyDef.userData = testSprite;
+        bodyDef.userData = newEntity;
         var body = this.world.CreateBody(bodyDef);
 
         // Define another box shape for our dynamic body.
@@ -358,6 +358,9 @@ var SCBox2dLayer = cc.Layer.extend({
                 myActor.setPosition(cc.p(b.GetPosition().x * this.gameConfig.Box2dLayer.PTM_RATIO, b.GetPosition().y * this.gameConfig.Box2dLayer.PTM_RATIO));
                 myActor.setRotation(-1 * cc.RADIANS_TO_DEGREES(b.GetAngle()));
                 //console.log(b.GetAngle());
+                if(myActor.state && myActor.state.movementDirection){
+                	cc.log("SCBox2DLayer update() myActor.state.movementDirection = " + myActor.state.movementDirection);
+                }
             }
         }
         

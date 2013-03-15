@@ -134,6 +134,11 @@ var SCGameConfig = cc.Class.extend({
 	   					"drawHitboxes":true	
    					};
    					
+   		this.settings = {
+	   		
+	   					"SCPhysics":false
+   					};
+   					
    					
    		// needed for JS-Bindings compatibility
    		cc.associateWithNative( this, cc.Class );

@@ -66,10 +66,10 @@ var SCTileLayer = cc.Layer.extend({
     	player.setID(this.gameConfig.globals.TAG_PLAYER);
     	entities.push(player);
     	physicsEntities.push(player);
-    	this.gameLayer.addChild(player, 99, this.gameConfig.globals.TAG_PLAYER);
-       	
-       	
-       	//this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER).setPosition(this.gameConfig.player.startPosition);
+    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewEntity(cc.p(192,300),player);
+    	//this.gameLayer.addChild(player, 99, this.gameConfig.globals.TAG_PLAYER);
+       	//physicsLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER).setPosition(this.gameConfig.player.startPosition);
+       	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER).setPosition(this.gameConfig.player.startPosition);
        	
        	// Make a car entity
     	// Since SCCar extends a CCSprite (SCEntity), we start with a texture. Could be a 1px transparent image if an invisible sprite is needed.
@@ -79,7 +79,7 @@ var SCTileLayer = cc.Layer.extend({
     	entities.push(carEntity);
     	physicsEntities.push(carEntity);
     	//this.gameLayer.addChild(carEntity, 100, this.gameConfig.globals.TAG_CAR_ENTITY);
-    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewSpriteWithCoordsNew(cc.p(200,200),carEntity);
+    	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewEntity(cc.p(200,200),carEntity);
        	
        	this.timer = new SCTimer();
        	this.timer.setPosition(this.gameConfig.timer.position);
@@ -106,7 +106,8 @@ var SCTileLayer = cc.Layer.extend({
        	// Register callbacks
      	var mapTouchEventCallback = function(testArg){player.mapTouched(testArg);};
        	var mapTouchEvent = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP));
-       	var mapTouchListener = new SCListener(mapTouchEvent, mapTouchEventCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER));
+       //	var mapTouchListener = new SCListener(mapTouchEvent, mapTouchEventCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER));
+       	var mapTouchListener = new SCListener(mapTouchEvent, mapTouchEventCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER));
        	this.mediator.register(mapTouchListener);
      	
      	
@@ -117,7 +118,7 @@ var SCTileLayer = cc.Layer.extend({
        	
        	var inputHandlerStateEventCallback = function(args){player.inputChanged(args);};
        	var inputHandleStateEvent = new SCEvent(this.gameConfig.globals.MSG_INPUT_CHANGED, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER));
-       	var inputHandlerStateEventListener = new SCListener(inputHandleStateEvent, inputHandlerStateEventCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER));
+       	var inputHandlerStateEventListener = new SCListener(inputHandleStateEvent, inputHandlerStateEventCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER));
        	this.mediator.register(inputHandlerStateEventListener);
      	
      	// set all hitboxes to draw or not.
@@ -205,17 +206,17 @@ var SCTileLayer = cc.Layer.extend({
        	//var event2 = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this.gameLayer, args);
        	//this.mediator.send(event2);
        	
-       	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER).move(mapTouchLocation);
+       	this.gameLayer.getChildByTag(this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER)).move(mapTouchLocation);
        	
        	
        	
        	
        	// Test adding an entity to the physics world
        	// doesn't currently work
-       	var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
-    	player.setPosition(this.gameConfig.player.startPosition);
-    	player.setID(this.gameConfig.globals.TAG_PLAYER);
-       	player.setTexture(this.gameConfig.player.carRight);
+       //	var player = new SCPlayer(this.gameConfig.player.carRight, this.gameConfig.player.baseTextureRect);     
+    	//player.setPosition(this.gameConfig.player.startPosition);
+    	//player.setID(this.gameConfig.globals.TAG_PLAYER);
+       	//player.setTexture(this.gameConfig.player.carRight);
        	// add this back for testing adding a physics shape
        	//this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).addNewSpriteWithCoords(cc.p(touchLocation.x - this.gameLayer.getPosition().x, touchLocation.y - this.gameLayer.getPosition().y ));
 
@@ -259,10 +260,13 @@ var SCTileLayer = cc.Layer.extend({
     },
     
     updatePhysics:function (dt){
-	    for( var i = 0; i < physicsEntities.length; i++ ){
-	    	if(physicsEntities[i].physicsComponent){
-				physicsEntities[i].updatePhysics(dt, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP), physicsEntities);
-			}else{cc.log("SCTMXTiledScene updatePhysics entity with ------ NO ------ physics component.");}
+	    
+	    if(this.gameConfig.settings.SCPhysics == true){
+	    	for( var i = 0; i < physicsEntities.length; i++ ){
+	    		if(physicsEntities[i].physicsComponent){
+					physicsEntities[i].updatePhysics(dt, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_TILE_MAP), physicsEntities);
+					}else{cc.log("SCTMXTiledScene updatePhysics entity with ------ NO ------ physics component.");}
+				}
 		}
     },
     
