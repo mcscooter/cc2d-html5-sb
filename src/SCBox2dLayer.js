@@ -342,6 +342,8 @@ var SCBox2dLayer = cc.Layer.extend({
         //of the simulation, however, we are using a variable time step here.
         //You need to make an informed choice, the following URL is useful
         //http://gafferongames.com/game-physics/fix-your-timestep/
+        
+        var b2Vec2 = Box2D.Common.Math.b2Vec2;
 
         var velocityIterations = 8;
         var positionIterations = 1;
@@ -360,6 +362,34 @@ var SCBox2dLayer = cc.Layer.extend({
                 //console.log(b.GetAngle());
                 if(myActor.state && myActor.state.movementDirection){
                 	cc.log("SCBox2DLayer update() myActor.state.movementDirection = " + myActor.state.movementDirection);
+                	if(myActor.state.movementDirection == "up"){
+	                	cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"up\"");
+	                	var force = new b2Vec2(0,10);
+                        b.SetAwake(true);
+                        b.SetLinearVelocity(force);
+	                	
+                	}
+                	if(myActor.state.movementDirection == "right"){
+	                	cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"right\"");
+	                	var force = new b2Vec2(10,0);
+                        b.SetAwake(true);
+                        b.SetLinearVelocity(force);
+	                	
+                	}
+                	if(myActor.state.movementDirection == "left"){
+	                	cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"left\"");
+	                	var force = new b2Vec2(-10,0);
+                        b.SetAwake(true);
+                        b.SetLinearVelocity(force);
+	                	
+                	}
+                	if(myActor.state.movementDirection == "down"){
+	                	cc.log("SCBox2DLayer update() myActor.state.movementDirection == \"down\"");
+	                	var force = new b2Vec2(0,-10);
+                        b.SetAwake(true);
+                        b.SetLinearVelocity(force);
+	                	
+                	}
                 }
             }
         }

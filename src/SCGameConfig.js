@@ -64,7 +64,7 @@ var SCGameConfig = cc.Class.extend({
 	   					"debugDraw":true,
 	   					"PTM_RATIO":32,//point to meter ratio for Box2D
 	   					"gravityX":0,
-	   					"gravityY":-10,
+	   					"gravityY":0,
 	   					"physicsWindowMargin":cc.p(50,50),
 	   					tileBox:{ 	
 	   						"diameter":.5,
