@@ -270,7 +270,8 @@ var SCTileLayer = cc.Layer.extend({
 		}
     },
     
-     updateRender:function (){
+    
+    updateRender:function (){
 	    for( var i = 0; i < entities.length; i++ ){
 			entities[i].updateRender();
 		}

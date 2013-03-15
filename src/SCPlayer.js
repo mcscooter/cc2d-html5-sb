@@ -16,7 +16,7 @@ var SCPlayer = SCEntity.extend({
    		this.physicsComponent.setBaseAccelleration(this.gameConfig.player.baseAccelleration);
    		this.physicsComponent.setMaxVelocity(this.gameConfig.player.maxVelocity);
     	this.centerOffset = this.gameConfig.player.centerOffset;
-    	
+    	this.rotatePhysics - this.gameConfig.player.rotatePhysics;
     	
     	return this;
    },
@@ -68,7 +68,11 @@ var SCPlayer = SCEntity.extend({
    
    updatePhysics:function(dt, map, physEntities){
    		this._super(dt);
-   		this.physicsComponent.update(dt, this, map, physEntities);  
+   		
+   		// if we're using the custom tile engine physics engine, check that
+   		if(this.gameConfig.settings.SCPhysics == true){
+	   		 this.physicsComponent.update(dt, this, map, physEntities);  
+	   	}
    },
    
    // put things like syncing position to physics and doing animation based on state here.

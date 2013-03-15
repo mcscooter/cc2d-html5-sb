@@ -32,7 +32,8 @@ var SCGameConfig = cc.Class.extend({
    						"maxVelocity":7,
    						"baseAccelleration":1,
    						"startingMovementDirection":null,
-   						"startingRenderDirection":"right"
+   						"startingRenderDirection":"right",
+   						"rotatePhysics":false
    					};
    					
    		this.greenCar = {
@@ -136,7 +137,8 @@ var SCGameConfig = cc.Class.extend({
    					
    		this.settings = {
 	   		
-	   					"SCPhysics":false
+	   					"SCPhysics":false,
+	   					"Box2DPhysics":true
    					};
    					
    					
