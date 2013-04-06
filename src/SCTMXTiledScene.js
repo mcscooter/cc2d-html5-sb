@@ -130,6 +130,10 @@ var SCTileLayer = cc.Layer.extend({
      	// set the mediator in components
      	this.setComponentGlobalMediator(this.mediator);
      	
+     	// test Web Audio API
+     	this.testWebAudioSynth();
+     	
+     	
         // update each frame
        	this.scheduleUpdate();
        		
@@ -238,6 +242,56 @@ var SCTileLayer = cc.Layer.extend({
     },
     onKeyDown:function(e){
     	this.inputHandler.keyDown(e);   
+    },
+    
+    // test the Web Audio API synth functionality
+    testWebAudioSynth:function (){
+	  cc.log("SCTMXTiledScene.js testWebAudioSynth()");  
+	  
+	  try {
+    		myAudioContext = new webkitAudioContext();
+    	}
+    	catch(e) {
+    		alert('Web Audio API is not supported in this browser');
+    	}
+	    
+	    // set up the master effects chain for all voices to connect to.
+
+	// connection point for all voices
+	effectChain = myAudioContext.createGainNode();
+
+	// convolver for a global reverb - just an example "global effect"
+    revNode = myAudioContext.createGainNode(); // createConvolver();
+
+    // gain for reverb
+	revGain = myAudioContext.createGainNode();
+	revGain.gain.value = 0.1;
+
+	// gain for reverb bypass.  Balance between this and the previous = effect mix.
+	revBypassGain = myAudioContext.createGainNode();
+
+	// overall volume control node
+    volNode = myAudioContext.createGainNode();
+    volNode.gain.value = 0.25;
+
+    effectChain.connect( revNode );
+    effectChain.connect( revBypassGain );
+    revNode.connect( revGain );
+    revGain.connect( volNode );
+    revBypassGain.connect( volNode );
+
+    // hook it up to the "speakers"
+    volNode.connect( myAudioContext.destination );
+    
+    
+    
+    // test oscillator
+    	var source = myAudioContext.createOscillator();
+	    source.type = 0; // sine wave
+	    source.connect(effectChain);
+	    source.noteOn(0);
+	    
+	    
     },
     
     // make a player, initialize, add to layer
