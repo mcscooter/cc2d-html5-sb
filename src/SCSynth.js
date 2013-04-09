@@ -15,7 +15,7 @@ var SCSynth = cc.Class.extend({
     		this.audioContext = new webkitAudioContext();
     	}
     	catch(e) {
-    		alert('Web Audio API is not supported in this browser');
+    		alert('Web Audio API is not woeking. Maybe try another browser (Chrome or Safari?');
     	}  
     	
     	// Main connection point for everything
@@ -61,18 +61,22 @@ var SCSynth = cc.Class.extend({
 	    
 	    
 	    // This is the "initial patch" of the ADSR settings.  YMMV.
-	    var currentEnvA = 1;
-	    var currentEnvD = 1;
-	    var currentEnvS = .10;
-	    var currentEnvR = .10;
+	    var currentEnvA = .05;
+	    var currentEnvD = .2;
+	    var currentEnvS = 4;
+	    var currentEnvR = .05;
 	    
 	    // set up the volume ADSR envelope
 	    var now = this.audioContext.currentTime;
-	    var envAttackEnd = now + (currentEnvA/10.0);
+	    var envAttackEnd = now + (currentEnvA);
+	    var envSusEnd = envAttackEnd + currentEnvS;
+	    var envRelEnd = envSusEnd + currentEnvR;
 
 	    this.source.envelope.gain.setValueAtTime( 0.0, now );
 	    this.source.envelope.gain.linearRampToValueAtTime( 1.0, envAttackEnd );
-	    this.source.envelope.gain.setTargetValueAtTime( (currentEnvS/100.0), envAttackEnd, (currentEnvD/100.0)+0.001 );
+	   // this.source.envelope.gain.setTargetValueAtTime( currentEnvS, envAttackEnd, currentEnvD+0.001 );
+	   	this.source.envelope.gain.linearRampToValueAtTime( 0.5,  envSusEnd);
+	   	this.source.envelope.gain.linearRampToValueAtTime( 0.0,  envRelEnd);
 
 	    this.source.noteOn(0);
     },
