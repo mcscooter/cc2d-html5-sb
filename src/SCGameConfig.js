@@ -144,10 +144,11 @@ var SCGameConfig = cc.Class.extend({
    					
    					
    		this.synth = {
-	   					sine1:{ 
+	   					voice1:{ 
 	   						
-	   						"waveType":0,
-	   						"defaultFrequency":84,
+	   						"waveType":1, // 0=sine, 1=square, 2=saw, 3=triangle, 4=custom (must give it a wave table)
+	   						"defaultFrequency":60, // MIDI value, middle C
+	   						"defaultVolume":.7,
 	   						
 	   						ADSR:{	
 	   							"attackTime":.01,
@@ -163,6 +164,8 @@ var SCGameConfig = cc.Class.extend({
 	   						
 	   						effects:{
 		   						reverb:{
+		   							"wetLevel":0,
+		   							"dryLevel":1
 			   						
 		   						}
 	   						}

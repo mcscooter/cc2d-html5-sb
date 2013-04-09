@@ -28,14 +28,15 @@ var SCSynth = cc.Class.extend({
 
     	// gain for reverb
     	this.revGain = this.audioContext.createGainNode();
-    	this.revGain.gain.value = 0.1;
+    	this.revGain.gain.value = this.gameConfig.synth.voice1.effects.reverb.wetLevel;
 
 		// gain for reverb bypass.  Balance between this and the previous = effect mix.
 		this.revBypassGain = this.audioContext.createGainNode();
-
+		this.revBypassGain.gain.value = this.gameConfig.synth.voice1.effects.reverb.dryLevel;
+		
 		// overall volume control node
     	this.volNode = this.audioContext.createGainNode();
-    	this.volNode.gain.value = 0.25;
+    	this.volNode.gain.value = this.gameConfig.synth.voice1.defaultVolume;
 
     	this.effectChain.connect( this.revNode );
     	this.effectChain.connect( this.revBypassGain );
@@ -49,7 +50,7 @@ var SCSynth = cc.Class.extend({
     
     	// set up oscillator
     	this.source = this.audioContext.createOscillator();
-	    this.source.type = 0; // sine wave
+	    this.source.type = this.gameConfig.synth.voice1.waveType; // type of wave. Sine, sawtooth, etc
 	    this.source.envelope = this.audioContext.createGainNode();
 	    this.source.connect(this.source.envelope);
 	    this.source.envelope.connect(this.effectChain);
@@ -60,10 +61,10 @@ var SCSynth = cc.Class.extend({
     playNote:function(note){
 	  
 	  	// Set up envelope with Attack, Decay, Sustain and Release values/times
-	    var attackTime = this.gameConfig.synth.sine1.ADSR.attackTime;
-	    var decayTime = this.gameConfig.synth.sine1.ADSR.decayTime;
-	    var sustainTime = this.gameConfig.synth.sine1.ADSR.sustainTime;
-	    var releaseTime = this.gameConfig.synth.sine1.ADSR.releaseTime;
+	    var attackTime = this.gameConfig.synth.voice1.ADSR.attackTime;
+	    var decayTime = this.gameConfig.synth.voice1.ADSR.decayTime;
+	    var sustainTime = this.gameConfig.synth.voice1.ADSR.sustainTime;
+	    var releaseTime = this.gameConfig.synth.voice1.ADSR.releaseTime;
 	    
 	    var now = this.audioContext.currentTime;
 	    var attackEndTime = now + (attackTime);
@@ -71,18 +72,18 @@ var SCSynth = cc.Class.extend({
 	    var sustainEndTime = decayEndTime + sustainTime;
 	    var releaseEndTime = sustainEndTime + releaseTime;
 
-	    this.source.envelope.gain.setValueAtTime( this.gameConfig.synth.sine1.ADSR.attackStartLevel, now );
-	    this.source.envelope.gain.linearRampToValueAtTime( this.gameConfig.synth.sine1.ADSR.attackEndLevel, attackEndTime );
-	   	this.source.envelope.gain.linearRampToValueAtTime( this.gameConfig.synth.sine1.ADSR.decayLevel,  decayEndTime);
-	   	this.source.envelope.gain.linearRampToValueAtTime( this.gameConfig.synth.sine1.ADSR.sustainLevel,  sustainEndTime);
-	   	this.source.envelope.gain.linearRampToValueAtTime( this.gameConfig.synth.sine1.ADSR.releaseLevel,  releaseEndTime);
+	    this.source.envelope.gain.setValueAtTime( this.gameConfig.synth.voice1.ADSR.attackStartLevel, now );
+	    this.source.envelope.gain.linearRampToValueAtTime( this.gameConfig.synth.voice1.ADSR.attackEndLevel, attackEndTime );
+	   	this.source.envelope.gain.linearRampToValueAtTime( this.gameConfig.synth.voice1.ADSR.decayLevel,  decayEndTime);
+	   	this.source.envelope.gain.linearRampToValueAtTime( this.gameConfig.synth.voice1.ADSR.sustainLevel,  sustainEndTime);
+	   	this.source.envelope.gain.linearRampToValueAtTime( this.gameConfig.synth.voice1.ADSR.releaseLevel,  releaseEndTime);
 
 
 	   	cc.log("SCSynth playNote(note), note = " + note);
 	   	if(note >= 0 && note <= 127){
 	   			this.source.frequency.value = this.frequencyFromMidi(note);
 	   		}else{
-		   		this.source.frequency.value = this.frequencyFromMidi(this.gameConfig.synth.sine1.defaultFrequency);
+		   		this.source.frequency.value = this.frequencyFromMidi(this.gameConfig.synth.voice1.defaultFrequency);
 	   	}
 	   	
 	    this.source.noteOn(0);
@@ -93,7 +94,7 @@ var SCSynth = cc.Class.extend({
 	   	if(note >= 0 && note <= 127){
 	   			this.source.frequency.value = this.frequencyFromMidi(note);
 	   		}else{
-		   		this.source.frequency.value = this.frequencyFromMidi(this.gameConfig.synth.sine1.defaultFrequency);
+		   		this.source.frequency.value = this.frequencyFromMidi(this.gameConfig.synth.voice1.defaultFrequency);
 	   	}
 	    
     },

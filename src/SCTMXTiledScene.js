@@ -114,7 +114,7 @@ var SCTileLayer = cc.Layer.extend({
      	var playerMovedCameraCallback = function(testArg){camera.playerMoved(testArg);};
        	var playerMovedCameraEvent = new SCEvent(this.gameConfig.globals.MSG_PLAYER_MOVED, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_CAMERA));
        	var playerMovedCameraListener = new SCListener(playerMovedCameraEvent, playerMovedCameraCallback, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_CAMERA));
-       	this.mediator.register(playerMovedCameraListener);
+       //	this.mediator.register(playerMovedCameraListener); // turn back on to have camera move
        	
        	var inputHandlerStateEventCallback = function(args){player.inputChanged(args);};
        	var inputHandleStateEvent = new SCEvent(this.gameConfig.globals.MSG_INPUT_CHANGED, this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_PLAYER));

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="25" height="22" tilewidth="32" tileheight="32">
+<map version="1.0" orientation="orthogonal" width="25" height="14" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="foreground2" tilewidth="32" tileheight="32" spacing="2" margin="2">
   <image source="test-tilemap-tilesheet.png" width="640" height="400"/>
   <tile id="0">
@@ -195,29 +195,29 @@
    </properties>
   </tile>
  </tileset>
- <layer name="background" width="25" height="22">
+ <layer name="background" width="25" height="14">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NkYGBgAmJGGtK0NHvUjlE7Ru0YtWPUjlE7Ru0YPnYAAEwo5DqYCAAA
+   H4sIAAAAAAAAA2NkYGBgAmJGGtK0NHvUjlE7Ru0YtWOo2QEAqsfQx3gFAAA=
   </data>
  </layer>
- <layer name="foreground" width="25" height="22">
+ <layer name="foreground" width="25" height="14">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NkYGBgRMOsQMyGRZwUTMgMmLwwEItAxUhlI5uBzw5VIFaDipHKRjYDlx3UxANtB6nxzIREw8zAFe/k2oFsD63soJc/0M2ghT9gmBZ2MKGxae0PUsKKiUxMDztICauhUpZQWkeM4lGMCwMAI6DEIpgIAAA=
+   H4sIAAAAAAAAA2NkYGBgRMOsUIwuTgqGmcFGQJ5Uc5mQMC3sYEJj09ofpIQVE5mYHnaQElbUwrS2A5c/RvEophQDACoO4/l4BQAA
   </data>
  </layer>
- <layer name="signs" width="25" height="22">
+ <layer name="signs" width="25" height="14">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NgGBlAA4mtPmCuGAWjYBSMglEwCkYBPgAAe0ChrpgIAAA=
+   H4sIAAAAAAAAA5NiYGCQGsWjeBSP4lFMNwwA0IEB9XgFAAA=
   </data>
  </layer>
- <layer name="customers" width="25" height="22">
+ <layer name="customers" width="25" height="14">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NgGAWjAAEsgdgKiK2B2AaIbYHYDiqOC8PUk2MHNvvQzSXXDmxuxOc/SvwBw1ZY2Mj+otQfuPyFzU+U+ANXvKCrI8cOfOkLW/iRYwe+tEtpuiLGH9jwKBgFo4A4AABDU6G5mAgAAA==
+   H4sIAAAAAAAAA5NiYGCQwoEtgdgKiK2RsBUWtg0Q26Kpx2UmNjvwYSscdtmRaAe6PyyxmIlNHTl2YHMrun+Q1ZFjBzaz0e0gNz6I8Qc2TKwdo3gUj3QMANLn9X54BQAA
   </data>
  </layer>
- <layer name="physics" width="25" height="22">
+ <layer name="physics" width="25" height="14">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA/NkYGDwpAP2oiEetWPUjqFux3DB1AgPWsWHJxl2YFNLSJ6W/iDGbnx2oIsRcge1/UGMm0iJD2Ltp5Y/8LmfGvFBSXzRMw/SGgMAhdMotpgIAAA=
+   H4sIAAAAAAAAA/NkYGDwpAP2oiEeSDsI2UuK/HAPK2qG3WDyBy3sGE1XA2sHrTEAEafHH3gFAAA=
   </data>
  </layer>
 </map>

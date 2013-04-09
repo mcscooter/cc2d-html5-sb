@@ -77,7 +77,7 @@ var SCBox2dLayer = cc.Layer.extend({
         	// attempt to draw debug using another canvas
         	var debugDraw = new b2DebugDraw();
 			debugDraw.SetSprite(document.getElementById("boxCanvas").getContext("2d"));
-			debugDraw.SetDrawScale(this.gameConfig.Box2dLayer.PTM_RATIO / 4);
+			debugDraw.SetDrawScale(this.gameConfig.Box2dLayer.PTM_RATIO);
 			debugDraw.SetFillAlpha(0.5);
 			debugDraw.SetLineThickness(1.0);
 			debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
