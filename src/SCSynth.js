@@ -7,6 +7,7 @@ var SCSynth = cc.Class.extend({
     	this.audioContext = null;
     	this.effectChain = null;
     	this.revNode = null;
+    	this.gameConfig = new SCGameConfig();
     },
     
     init:function (){
@@ -15,7 +16,7 @@ var SCSynth = cc.Class.extend({
     		this.audioContext = new webkitAudioContext();
     	}
     	catch(e) {
-    		alert('Web Audio API is not woeking. Maybe try another browser (Chrome or Safari?');
+    		alert('Web Audio API is not working. Maybe try another browser (Chrome or Safari?');
     	}  
     	
     	// Main connection point for everything
@@ -46,36 +47,60 @@ var SCSynth = cc.Class.extend({
     	this.volNode.connect( this.audioContext.destination );
     
     
-    
     	// set up oscillator
     	this.source = this.audioContext.createOscillator();
 	    this.source.type = 0; // sine wave
-	    this.source.envelope = this.audioContext.createGain();
+	    this.source.envelope = this.audioContext.createGainNode();
 	    this.source.connect(this.source.envelope);
 	    this.source.envelope.connect(this.effectChain);
 	    
+	    
     },
     
-    playNote:function(){
+    playNote:function(note){
 	  
 	  	// Set up envelope with Attack, Decay, Sustain and Release values/times
-	    var currentEnvA = .05;
-	    var currentEnvD = .2;
-	    var currentEnvS = .4;
-	    var currentEnvR = .05;
+	    var attackTime = this.gameConfig.synth.sine1.ADSR.attackTime;
+	    var decayTime = this.gameConfig.synth.sine1.ADSR.decayTime;
+	    var sustainTime = this.gameConfig.synth.sine1.ADSR.sustainTime;
+	    var releaseTime = this.gameConfig.synth.sine1.ADSR.releaseTime;
 	    
 	    var now = this.audioContext.currentTime;
-	    var envAttackEnd = now + (currentEnvA);
-	    var envSusEnd = envAttackEnd + currentEnvS;
-	    var envRelEnd = envSusEnd + currentEnvR;
+	    var attackEndTime = now + (attackTime);
+	    var decayEndTime = attackEndTime + decayTime;
+	    var sustainEndTime = decayEndTime + sustainTime;
+	    var releaseEndTime = sustainEndTime + releaseTime;
 
-	    this.source.envelope.gain.setValueAtTime( 0.0, now );
-	    this.source.envelope.gain.linearRampToValueAtTime( 1.0, envAttackEnd );
-	   	this.source.envelope.gain.linearRampToValueAtTime( 0.5,  envSusEnd);
-	   	this.source.envelope.gain.linearRampToValueAtTime( 0.0,  envRelEnd);
+	    this.source.envelope.gain.setValueAtTime( this.gameConfig.synth.sine1.ADSR.attackStartLevel, now );
+	    this.source.envelope.gain.linearRampToValueAtTime( this.gameConfig.synth.sine1.ADSR.attackEndLevel, attackEndTime );
+	   	this.source.envelope.gain.linearRampToValueAtTime( this.gameConfig.synth.sine1.ADSR.decayLevel,  decayEndTime);
+	   	this.source.envelope.gain.linearRampToValueAtTime( this.gameConfig.synth.sine1.ADSR.sustainLevel,  sustainEndTime);
+	   	this.source.envelope.gain.linearRampToValueAtTime( this.gameConfig.synth.sine1.ADSR.releaseLevel,  releaseEndTime);
 
+
+	   	cc.log("SCSynth playNote(note), note = " + note);
+	   	if(note >= 0 && note <= 127){
+	   			this.source.frequency.value = this.frequencyFromMidi(note);
+	   		}else{
+		   		this.source.frequency.value = this.frequencyFromMidi(this.gameConfig.synth.sine1.defaultFrequency);
+	   	}
+	   	
 	    this.source.noteOn(0);
     },
+    
+    changeNoteFrequency:function(note){
+	     	cc.log("SCSynth changeNoteFrequency(note), note = " + note);
+	   	if(note >= 0 && note <= 127){
+	   			this.source.frequency.value = this.frequencyFromMidi(note);
+	   		}else{
+		   		this.source.frequency.value = this.frequencyFromMidi(this.gameConfig.synth.sine1.defaultFrequency);
+	   	}
+	    
+    },
+    
+    frequencyFromMidi:function(note) {
+		return 440 * Math.pow(2,(note-69)/12);
+	},
     
     setGlobalMediator:function(mediator){
 	  	cc.log("SCLogicComponent setGlobalMediator()");

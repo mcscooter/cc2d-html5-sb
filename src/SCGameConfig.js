@@ -55,7 +55,8 @@ var SCGameConfig = cc.Class.extend({
    
    		this.maps = {
 	   					level1:{ 	
-	   						"filename":"res/tilemaps/test-tilemap.tmx",
+	   						//"filename":"res/tilemaps/test-tilemap.tmx",
+	   						"filename":"res/tilemaps/synth1.tmx",
 	   						"position":cc.p(0,0)
 	   					}
    					};
@@ -139,6 +140,36 @@ var SCGameConfig = cc.Class.extend({
 	   		
 	   					"SCPhysics":false,
 	   					"Box2DPhysics":true
+   					};
+   					
+   					
+   		this.synth = {
+	   					sine1:{ 
+	   						
+	   						"waveType":0,
+	   						"defaultFrequency":84,
+	   						
+	   						ADSR:{	
+	   							"attackTime":.01,
+	   							"decayTime":.03,
+	   							"sustainTime":67,
+	   							"releaseTime":.02,
+	   							"attackStartLevel":0,
+	   							"attackEndLevel":1,
+	   							"decayLevel":.6,
+	   							"sustainLevel":.5,
+	   							"releaseLevel":0
+	   						},
+	   						
+	   						effects:{
+		   						reverb:{
+			   						
+		   						}
+	   						}
+	   					
+	   						
+	   						
+	   					}
    					};
    					
    					

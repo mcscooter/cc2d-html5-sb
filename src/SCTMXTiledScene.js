@@ -162,9 +162,10 @@ var SCTileLayer = cc.Layer.extend({
         cc.Director.getInstance().getTouchDispatcher().addTargetedDelegate(this, 0, true);
     },
     onTouchBegan:function (touch, event) {
-
-        return true;
+	    this.synth.playNote(Math.abs(Math.floor(touch.getLocation().y / cc.Director.getInstance().getWinSize().height * 127)));
+        return true; // set this if you want to claim the touch
     },
+    
     
     // Handles touch up and mouse up
     onTouchEnded:function (touch, event) {
@@ -235,7 +236,7 @@ var SCTileLayer = cc.Layer.extend({
        	//this.testWebAudioSynth();
        	
        	
-       	this.synth.playNote();
+       	
        	
        	
        	
@@ -245,7 +246,7 @@ var SCTileLayer = cc.Layer.extend({
     },
     prevLocation:null,
     onTouchMoved:function (touch, event) {
-  
+	     this.synth.changeNoteFrequency(Math.abs(Math.floor(touch.getLocation().y / cc.Director.getInstance().getWinSize().height * 127)));
     },
     
     // Keyboard handling
