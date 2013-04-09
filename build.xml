@@ -132,6 +132,7 @@
                 <file name="src/Box2dTest.js"/>
                 <file name="src/SCBox2dLayer.js"/>
                 <file name="src/SCGameLayer.js"/>
+                <file name="src/SCSynth.js"/>
                 <file name="src/SCHUDLayer.js"/>
                 <file name="src/SCLogicComponent.js"/>
                 <file name="src/SCPlayerComponent.js"/>

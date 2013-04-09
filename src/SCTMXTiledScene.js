@@ -131,11 +131,15 @@ var SCTileLayer = cc.Layer.extend({
      	this.setComponentGlobalMediator(this.mediator);
      	
      	// test Web Audio API
-     	this.testWebAudioSynth();
+     	//this.testWebAudioSynth();
      	
+     	this.synth = new SCSynth();
+     	this.synth.init();
      	
         // update each frame
        	this.scheduleUpdate();
+       	
+     
        		
     },
     
@@ -210,7 +214,7 @@ var SCTileLayer = cc.Layer.extend({
        	//var event2 = new SCEvent(this.gameConfig.globals.MSG_MAP_TOUCHED, this.gameLayer, args);
        	//this.mediator.send(event2);
        	
-       	this.gameLayer.getChildByTag(this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER)).move(mapTouchLocation);
+       	//this.gameLayer.getChildByTag(this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getChildByTag(this.gameConfig.globals.TAG_PLAYER)).move(mapTouchLocation);
        	
        	
        	
@@ -227,6 +231,14 @@ var SCTileLayer = cc.Layer.extend({
        	// a test for updating the physics shapes in the world
        	// will eventually call this when the game screen has moved enough or state has otherwise changed that would cause a need to update.
        	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getPhysicsUpdateWindow(this.gameLayer.getPosition(), tileMap);
+       	
+       	//this.testWebAudioSynth();
+       	
+       	
+       	this.synth.playNote();
+       	
+       	
+       	
     
     },
     onTouchCancelled:function (touch, event) {
@@ -252,16 +264,15 @@ var SCTileLayer = cc.Layer.extend({
     		myAudioContext = new webkitAudioContext();
     	}
     	catch(e) {
-    		alert('Web Audio API is not supported in this browser');
+    		alert('Web Audio API is not supported! Try Chrome browser!!!');
     	}
 	    
-	    // set up the master effects chain for all voices to connect to.
-
+	// Try setting up an effects chain    
 	// connection point for all voices
 	effectChain = myAudioContext.createGainNode();
 
-	// convolver for a global reverb - just an example "global effect"
-    revNode = myAudioContext.createGainNode(); // createConvolver();
+	//Reverb
+    revNode = myAudioContext.createGainNode();
 
     // gain for reverb
 	revGain = myAudioContext.createGainNode();
@@ -288,9 +299,25 @@ var SCTileLayer = cc.Layer.extend({
     // test oscillator
     	var source = myAudioContext.createOscillator();
 	    source.type = 0; // sine wave
-	    source.connect(effectChain);
-	    source.noteOn(0);
+	    source.envelope = myAudioContext.createGain();
+	    source.connect(source.envelope);
+	    source.envelope.connect(effectChain);
 	    
+	    // This is the "initial patch" of the ADSR settings.  YMMV.
+	    var currentEnvA = 1;
+	    var currentEnvD = 1;
+	    var currentEnvS = 10;
+	    var currentEnvR = 10;
+	    
+	    // set up the volume ADSR envelope
+	    var now = myAudioContext.currentTime;
+	    var envAttackEnd = now + (currentEnvA/10.0);
+
+	    source.envelope.gain.setValueAtTime( 0.0, now );
+	    source.envelope.gain.linearRampToValueAtTime( 1.0, envAttackEnd );
+	    source.envelope.gain.setTargetValueAtTime( (currentEnvS/100.0), envAttackEnd, (currentEnvD/100.0)+0.001 );
+
+	    source.noteOn(0);
 	    
     },
     
