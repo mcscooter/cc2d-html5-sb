@@ -42,12 +42,12 @@ var SCSynth = cc.Class.extend({
     	this.revGain.connect( this.volNode );
     	this.revBypassGain.connect( this.volNode );
 
-   	 	// hook it up to the "speakers"
+   	 	// connect to output
     	this.volNode.connect( this.audioContext.destination );
     
     
     
-    	// test oscillator
+    	// set up oscillator
     	this.source = this.audioContext.createOscillator();
 	    this.source.type = 0; // sine wave
 	    this.source.envelope = this.audioContext.createGain();
@@ -57,16 +57,13 @@ var SCSynth = cc.Class.extend({
     },
     
     playNote:function(){
-	    
-	    
-	    
-	    // This is the "initial patch" of the ADSR settings.  YMMV.
+	  
+	  	// Set up envelope with Attack, Decay, Sustain and Release values/times
 	    var currentEnvA = .05;
 	    var currentEnvD = .2;
-	    var currentEnvS = 4;
+	    var currentEnvS = .4;
 	    var currentEnvR = .05;
 	    
-	    // set up the volume ADSR envelope
 	    var now = this.audioContext.currentTime;
 	    var envAttackEnd = now + (currentEnvA);
 	    var envSusEnd = envAttackEnd + currentEnvS;
@@ -74,7 +71,6 @@ var SCSynth = cc.Class.extend({
 
 	    this.source.envelope.gain.setValueAtTime( 0.0, now );
 	    this.source.envelope.gain.linearRampToValueAtTime( 1.0, envAttackEnd );
-	   // this.source.envelope.gain.setTargetValueAtTime( currentEnvS, envAttackEnd, currentEnvD+0.001 );
 	   	this.source.envelope.gain.linearRampToValueAtTime( 0.5,  envSusEnd);
 	   	this.source.envelope.gain.linearRampToValueAtTime( 0.0,  envRelEnd);
 
