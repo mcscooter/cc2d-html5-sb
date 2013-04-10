@@ -167,6 +167,12 @@ var SCGameConfig = cc.Class.extend({
 		   							"wetLevel":0,
 		   							"dryLevel":1
 			   						
+		   						},
+		   						lowPassFilter:{
+			   						"defaultFrequency":440,
+			   						"type":0,
+			   						"gain":1
+			   						
 		   						}
 	   						}
 	   					

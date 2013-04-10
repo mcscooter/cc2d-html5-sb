@@ -234,13 +234,7 @@ var SCTileLayer = cc.Layer.extend({
        	// will eventually call this when the game screen has moved enough or state has otherwise changed that would cause a need to update.
        	this.gameLayer.getChildByTag(this.gameConfig.globals.TAG_BOX2D_LAYER).getPhysicsUpdateWindow(this.gameLayer.getPosition(), tileMap);
        	
-       	//this.testWebAudioSynth();
-       	
-       	
-       	
-       	
-       	
-       	
+       	//this.testWebAudioSynth();  	
     
     },
     onTouchCancelled:function (touch, event) {

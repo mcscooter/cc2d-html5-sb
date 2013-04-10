@@ -54,9 +54,9 @@ var SCSynth = cc.Class.extend({
     	// Create the audio graph.
     	this.lowPassFilter.connect(this.audioContext.destination);
     	// Create and specify parameters for the low-pass filter.
-    	this.lowPassFilter.type = 0; // Low-pass filter. See BiquadFilterNode docs
-    	this.lowPassFilter.frequency.value = 440; // Set cutoff to 440 HZ
-    	this.lowPassFilter.gain = 1;
+    	this.lowPassFilter.type = this.gameConfig.synth.voice1.effects.lowPassFilter.type; // Low-pass filter. See BiquadFilterNode docs
+    	this.lowPassFilter.frequency.value = this.gameConfig.synth.voice1.effects.lowPassFilter.defaultFrequency; // Set cutoff to 440 HZ
+    	this.lowPassFilter.gain = this.gameConfig.synth.voice1.effects.lowPassFilter.gain;
     
     
     	// set up oscillator
