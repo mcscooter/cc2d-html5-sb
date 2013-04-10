@@ -163,6 +163,7 @@ var SCTileLayer = cc.Layer.extend({
     },
     onTouchBegan:function (touch, event) {
 	    this.synth.playNote(Math.abs(Math.floor(touch.getLocation().y / cc.Director.getInstance().getWinSize().height * 127)));
+	    this.synth.changeLowPassFilterFrequency(Math.abs(Math.floor(touch.getLocation().x / cc.Director.getInstance().getWinSize().width * 12000)));
         return true; // set this if you want to claim the touch
     },
     
@@ -247,6 +248,7 @@ var SCTileLayer = cc.Layer.extend({
     prevLocation:null,
     onTouchMoved:function (touch, event) {
 	     this.synth.changeNoteFrequency(Math.abs(Math.floor(touch.getLocation().y / cc.Director.getInstance().getWinSize().height * 127)));
+	     this.synth.changeLowPassFilterFrequency(Math.abs(Math.floor(touch.getLocation().x / cc.Director.getInstance().getWinSize().width * 12000)));
     },
     
     // Keyboard handling

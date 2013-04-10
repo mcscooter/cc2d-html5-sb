@@ -38,14 +38,25 @@ var SCSynth = cc.Class.extend({
     	this.volNode = this.audioContext.createGainNode();
     	this.volNode.gain.value = this.gameConfig.synth.voice1.defaultVolume;
 
-    	this.effectChain.connect( this.revNode );
-    	this.effectChain.connect( this.revBypassGain );
-    	this.revNode.connect( this.revGain );
-    	this.revGain.connect( this.volNode );
-    	this.revBypassGain.connect( this.volNode );
+    	this.effectChain.connect(this.revNode);
+    	this.effectChain.connect(this.revBypassGain);
+    	this.revNode.connect(this.revGain);
+    	this.revGain.connect(this.volNode);
+    	this.revBypassGain.connect(this.volNode);
+
+
+    	// Create the filter
+    	this.lowPassFilter = this.audioContext.createBiquadFilter();
 
    	 	// connect to output
-    	this.volNode.connect( this.audioContext.destination );
+    	this.volNode.connect(this.lowPassFilter);
+    	
+    	// Create the audio graph.
+    	this.lowPassFilter.connect(this.audioContext.destination);
+    	// Create and specify parameters for the low-pass filter.
+    	this.lowPassFilter.type = 0; // Low-pass filter. See BiquadFilterNode docs
+    	this.lowPassFilter.frequency.value = 440; // Set cutoff to 440 HZ
+    	this.lowPassFilter.gain = 1;
     
     
     	// set up oscillator
@@ -96,6 +107,15 @@ var SCSynth = cc.Class.extend({
 	   		}else{
 		   		this.source.frequency.value = this.frequencyFromMidi(this.gameConfig.synth.voice1.defaultFrequency);
 	   	}
+	    
+    },
+    
+    changeLowPassFilterFrequency:function(freq){
+    		cc.log("SCSynth changeLowPassFilterFrequency() freq = " + freq);
+	  		if(freq > 10 && freq < 11000){
+	  			cc.log("SCSynth changeLowPassFilterFrequency() CHANGING freq = " + freq);
+		  		this.lowPassFilter.frequency.value = freq;
+	  		}  
 	    
     },
     
